@@ -2,25 +2,37 @@
 
 trap 'echo "$BASH_SOURCE: line $LINENO" >&2' ERR
 set -o errexit -o errtrace -o pipefail
+set -o xtrace -o verbose
 
 
-TEST_TEMPLATE=${TEST_TEMPLATE:-../pgxntool-test-template}
-PGXNREPO=${PGXNREPO:-${0%/*}../pgxntool}
-if ! echo $PGXNREPO | egrep -q '^(git|https?):'; then
-  cd $PGXNREPO
-  PGXNREPO=`pwd`
-fi
+TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
+PGXNREPO=${PGXNREPO:-${0%/*}/../pgxntool}
+PGXNBRANCH=${PGXNBRANCH:-master}
 
-cd ${0%/*} || exit 1 # Make damn certain we know where we're at before rm'ing
-rm -rf test
+find_repo () {
+  if ! echo $1 | egrep -q '^(git|https?):'; then
+    cd $1
+    pwd
+  fi
+}
 
-git clone $TEST_TEMPLATE test
-cd test
-git subtree pull -P pgxntool $PGXNREPO $PGXNBRANCH
+TEST_TEMPLATE=`find_repo $TEST_TEMPLATE`
+PGXNREPO=`find_repo $PGXNREPO`
+
+TMPDIR=${TMPDIR:-${TEMP:-$TMP}}
+TEST_DIR=`mktemp -d -t pgxntool-test.XXXXXX`
+[ $? -eq 0 ] || exit 1
+trap "echo cd $TEST_DIR" EXIT
+
+git clone $TEST_TEMPLATE $TEST_DIR
+cd $TEST_DIR
+git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH
 pgxntool/setup.sh
+ls
+git status
 git diff
 git commit -am "Test setup"
-
+make || exit 1
 
 
 # vi: expandtab sw=2 ts=2
