@@ -32,7 +32,9 @@ ls
 git status
 git diff
 git commit -am "Test setup"
-make || exit 1
 
+make pgtap || exit 1
+
+make || exit 1
 
 # vi: expandtab sw=2 ts=2
