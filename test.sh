@@ -5,9 +5,9 @@ set -o errexit -o errtrace -o pipefail
 set -o xtrace -o verbose
 
 
+PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
+PGXNREPO=${PGXNREPO:-${2:-${0%/*}/../pgxntool}}
 TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
-PGXNREPO=${PGXNREPO:-${0%/*}/../pgxntool}
-PGXNBRANCH=${PGXNBRANCH:-master}
 
 find_repo () {
   if ! echo $1 | egrep -q '^(git|https?):'; then
