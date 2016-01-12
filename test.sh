@@ -47,6 +47,9 @@ git commit -am "Test setup"
 
 make pgtap || exit 1
 
+# Copy stuff from template to where it normally lives
+cp -R t/* .
+
 make || exit 1
 
 # vi: expandtab sw=2 ts=2
