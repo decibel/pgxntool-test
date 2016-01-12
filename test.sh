@@ -51,7 +51,7 @@ make pgtap || exit 1
 cp -R t/* .
 
 # Add extension as a dep
-echo 'CREATE EXTENSION pgxntool-test;' >> test/deps.sql
+echo 'CREATE EXTENSION "pgxntool-test";' >> test/deps.sql
 
 make || exit 1
 
