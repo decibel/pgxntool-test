@@ -27,7 +27,12 @@ trap "echo PTD='$PTD'" EXIT
 git clone $TEST_TEMPLATE $TEST_DIR
 cd $TEST_DIR
 git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH
+
 pgxntool/setup.sh
+
+# Run setup.sh again to verify it doesn't over-write things
+pgxntool/setup.sh
+
 ls
 git status
 git diff
