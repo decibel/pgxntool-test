@@ -22,7 +22,7 @@ PGXNREPO=`find_repo $PGXNREPO`
 TMPDIR=${TMPDIR:-${TEMP:-$TMP}}
 TEST_DIR=`mktemp -d -t pgxntool-test.XXXXXX`
 [ $? -eq 0 ] || exit 1
-trap "echo cd $TEST_DIR" EXIT
+trap "echo PTD='$PTD'" EXIT
 
 git clone $TEST_TEMPLATE $TEST_DIR
 cd $TEST_DIR
