@@ -2,8 +2,7 @@
 
 trap 'echo "$BASH_SOURCE: line $LINENO" >&2' ERR
 set -o errexit -o errtrace -o pipefail
-set -o xtrace -o verbose
-
+#set -o xtrace -o verbose
 
 PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
 PGXNREPO=${PGXNREPO:-${2:-${0%/*}/../pgxntool}}
