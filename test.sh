@@ -19,6 +19,12 @@ find_repo () {
 TEST_TEMPLATE=`find_repo $TEST_TEMPLATE`
 PGXNREPO=`find_repo $PGXNREPO`
 
+out () {
+  echo '######################################'
+  echo $*
+  echo '######################################'
+}
+
 TMPDIR=${TMPDIR:-${TEMP:-$TMP}}
 TEST_DIR=`mktemp -d -t pgxntool-test.XXXXXX`
 [ $? -eq 0 ] || exit 1
@@ -56,5 +62,17 @@ echo 'CREATE EXTENSION "pgxntool-test";' >> test/deps.sql
 make || exit 1
 
 make test || exit 1
+out Should be clean output
+
+# Mess with output to test make results
+echo >> $TEST_DIR/test/expected/pgxntool-test.out
+# Need to remove this so the regression test doesn't overwrite expected/pgxntool-test.out
+rm -rf $TEST_DIR/test/output
+
+make test
+out Should have a diff
+make results
+make test
+out Should be clean output
 
 # vi: expandtab sw=2 ts=2
