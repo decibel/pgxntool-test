@@ -4,8 +4,9 @@ trap 'echo "$BASH_SOURCE: line $LINENO" >&2' ERR
 set -o errexit -o errtrace -o pipefail
 #set -o xtrace -o verbose
 
+BASEDIR=`cd ${0%/*}; pwd`
 PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
-PGXNREPO=${PGXNREPO:-${2:-${0%/*}/../pgxntool}}
+PGXNREPO=${PGXNREPO:-${2:-$BASEDIR/../pgxntool}}
 TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
 
 find_repo () {
