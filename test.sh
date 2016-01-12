@@ -50,6 +50,11 @@ make pgtap || exit 1
 # Copy stuff from template to where it normally lives
 cp -R t/* .
 
+# Add extension as a dep
+echo 'CREATE EXTENSION pgxntool-test;' >> test/deps.sql
+
 make || exit 1
+
+make test || exit 1
 
 # vi: expandtab sw=2 ts=2
