@@ -36,6 +36,7 @@ pgxntool/setup.sh
 ls
 git status
 git diff
+sed -i .bak -f $BASEDIR/META.in.json.sed META.in.json
 git commit -am "Test setup"
 
 make pgtap || exit 1
