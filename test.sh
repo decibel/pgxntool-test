@@ -36,6 +36,9 @@ pgxntool/setup.sh
 ls
 git status
 git diff
+
+# Need to sleep 1 second otherwise make won't pickup new timestamp
+sleep 1
 sed -i .bak -f $BASEDIR/META.in.json.sed META.in.json
 git commit -am "Test setup"
 
