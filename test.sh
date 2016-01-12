@@ -40,6 +40,9 @@ git diff
 # Need to sleep 1 second otherwise make won't pickup new timestamp
 sleep 1
 sed -i .bak -f $BASEDIR/META.in.json.sed META.in.json
+# TODO: remove once makefile properly handles META.in
+make META.json
+
 git commit -am "Test setup"
 
 make pgtap || exit 1
