@@ -1,0 +1,204 @@
+# Cloning tree
+# Doing subtree add
+git fetch @PGXNREPO@ @PGXNBRANCH@
+# Running setup.sh
+Copying pgxntool/_.gitignore to .gitignore and adding to git
+Copying pgxntool/META.in.json to META.in.json and adding to git
+Creating Makefile
+pgxntool/build_meta.sh META.in.json META.json
+Copying ../pgxntool/test/deps.sql to deps.sql and adding to git
+If you won't be creating C code then you can:
+
+rmdir src
+
+If everything looks good then
+
+git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
+# Run setup.sh again to verify it doesn't over-write things
+.gitignore already exists
+META.in.json already exists
+Makefile already exists
+make: `META.json' is up to date.
+deps.sql already exists
+If you won't be creating C code then you can:
+
+rmdir src
+
+If everything looks good then
+
+git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
+######################################
+# Status
+######################################
+META.in.json
+META.json
+Makefile
+pgxntool
+pgxntool-test.control
+sql
+src
+t
+test
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	new file:   .gitignore
+	new file:   META.in.json
+	new file:   META.json
+	new file:   Makefile
+	new file:   test/deps.sql
+	new file:   test/pgxntool
+
+# Initial make produces error for now
+pgxntool/build_meta.sh META.in.json META.json
+# git commit
+@GIT COMMIT@
+ 6 files changed, 240 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 META.in.json
+ create mode 100644 META.json
+ create mode 100644 Makefile
+ create mode 100644 test/deps.sql
+ create mode 120000 test/pgxntool
+# Try pulling in pgtap
+make: Nothing to be done for `pgtap'.
+# Copy stuff from template to where it normally lives
+# Plain make
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+# make test
+rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf results/ regression.diffs regression.out tmp_check/ log/
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
+/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+(using postmaster on Unix socket, default port)
+============== dropping database "contrib_regression" ==============
+DROP DATABASE
+============== creating database "contrib_regression" ==============
+CREATE DATABASE
+ALTER DATABASE
+============== installing plpgsql                     ==============
+CREATE LANGUAGE
+============== running regression test queries        ==============
+test pgxntool-test            ... ok
+
+=====================
+ All 1 tests passed. 
+=====================
+
+######################################
+# ^^^ Should be clean output ^^^
+######################################
+# Test make results
+rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf results/ regression.diffs regression.out tmp_check/ log/
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
+/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+(using postmaster on Unix socket, default port)
+============== dropping database "contrib_regression" ==============
+DROP DATABASE
+============== creating database "contrib_regression" ==============
+CREATE DATABASE
+ALTER DATABASE
+============== installing plpgsql                     ==============
+CREATE LANGUAGE
+============== running regression test queries        ==============
+test pgxntool-test            ... FAILED
+
+======================
+ 1 of 1 tests failed. 
+======================
+
+The differences that caused some tests to fail can be viewed in the
+file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
+above is saved in the file "@TEST_DIR@/test/regression.out".
+
+*** @TEST_DIR@/test/expected/pgxntool-test.out
+--- @TEST_DIR@/test/results/pgxntool-test.out
+***************
+*** 45,48 ****
+  \echo TRANSACTION INTENTIONALLY LEFT OPEN
+  TRANSACTION INTENTIONALLY LEFT OPEN
+  -- vi: expandtab ts=2 sw=2
+- 
+--- 45,47 ----
+
+======================================================================
+
+######################################
+# ^^^ Should have a diff ^^^
+######################################
+rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf results/ regression.diffs regression.out tmp_check/ log/
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
+/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+(using postmaster on Unix socket, default port)
+============== dropping database "contrib_regression" ==============
+DROP DATABASE
+============== creating database "contrib_regression" ==============
+CREATE DATABASE
+ALTER DATABASE
+============== installing plpgsql                     ==============
+CREATE LANGUAGE
+============== running regression test queries        ==============
+test pgxntool-test            ... FAILED
+
+======================
+ 1 of 1 tests failed. 
+======================
+
+The differences that caused some tests to fail can be viewed in the
+file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
+above is saved in the file "@TEST_DIR@/test/regression.out".
+
+*** @TEST_DIR@/test/expected/pgxntool-test.out
+--- @TEST_DIR@/test/results/pgxntool-test.out
+***************
+*** 45,48 ****
+  \echo TRANSACTION INTENTIONALLY LEFT OPEN
+  TRANSACTION INTENTIONALLY LEFT OPEN
+  -- vi: expandtab ts=2 sw=2
+- 
+--- 45,47 ----
+
+======================================================================
+
+rsync -rlpgovP test/results/ test/expected
+sending incremental file list
+pgxntool-test.out
+          1,466 100%    0.00kB/s    0:00:00            1,466 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+
+sent 1,589 bytes  received 35 bytes  3,248.00 bytes/sec
+total size is 1,466  speedup is 0.90
+rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf results/ regression.diffs regression.out tmp_check/ log/
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
+/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+(using postmaster on Unix socket, default port)
+============== dropping database "contrib_regression" ==============
+DROP DATABASE
+============== creating database "contrib_regression" ==============
+CREATE DATABASE
+ALTER DATABASE
+============== installing plpgsql                     ==============
+CREATE LANGUAGE
+============== running regression test queries        ==============
+test pgxntool-test            ... ok
+
+=====================
+ All 1 tests passed. 
+=====================
+
+######################################
+# ^^^ Should be clean output ^^^
+######################################
