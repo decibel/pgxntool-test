@@ -117,6 +117,7 @@ exec >&6 6>&-
 sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
   -e 's/^[master [0-9a-f]+] Test setup/@GIT COMMIT@/' \
   -e 's/(@TEST_DIR@[^[:space:]]*).*:.*:.*/\1/' \
+  -e "s#^git fetch $PGXNREPO $PGXNBRANCH#git fetch @PGXNREPO@ @PGXNBRANCH@#" \
   $LOG
 
 # Since diff will exit non-zero if there's a delta, change our error trap
