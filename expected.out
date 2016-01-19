@@ -84,11 +84,38 @@ ALTER DATABASE
 ============== installing plpgsql                     ==============
 CREATE LANGUAGE
 ============== running regression test queries        ==============
-test pgxntool-test            ... ok
+test pgxntool-test            ... FAILED
 
-=====================
- All 1 tests passed. 
-=====================
+======================
+ 1 of 1 tests failed. 
+======================
+
+The differences that caused some tests to fail can be viewed in the
+file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
+above is saved in the file "@TEST_DIR@/test/regression.out".
+
+*** @TEST_DIR@/test/expected/pgxntool-test.out
+--- @TEST_DIR@/test/results/pgxntool-test.out
+***************
+*** 41,47 ****
+    , 3
+  );
+  ok 1
+  SELECT finish();
+! \echo TRANSACTION INTENTIONALLY LEFT OPEN
+! TRANSACTION INTENTIONALLY LEFT OPEN
+  -- vi: expandtab ts=2 sw=2
+--- 41,48 ----
+    , 3
+  );
+  ok 1
++ \i @TEST_DIR@/test/pgxntool/finish.sql
+  SELECT finish();
+! \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
+! # TRANSACTION INTENTIONALLY LEFT OPEN!
+  -- vi: expandtab ts=2 sw=2
+
+======================================================================
 
 ######################################
 # ^^^ Should be clean output ^^^
@@ -122,12 +149,24 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
-*** 45,48 ****
-  \echo TRANSACTION INTENTIONALLY LEFT OPEN
-  TRANSACTION INTENTIONALLY LEFT OPEN
+*** 41,48 ****
+    , 3
+  );
+  ok 1
+  SELECT finish();
+! \echo TRANSACTION INTENTIONALLY LEFT OPEN
+! TRANSACTION INTENTIONALLY LEFT OPEN
   -- vi: expandtab ts=2 sw=2
 - 
---- 45,47 ----
+--- 41,48 ----
+    , 3
+  );
+  ok 1
++ \i @TEST_DIR@/test/pgxntool/finish.sql
+  SELECT finish();
+! \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
+! # TRANSACTION INTENTIONALLY LEFT OPEN!
+  -- vi: expandtab ts=2 sw=2
 
 ======================================================================
 
@@ -162,22 +201,34 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
-*** 45,48 ****
-  \echo TRANSACTION INTENTIONALLY LEFT OPEN
-  TRANSACTION INTENTIONALLY LEFT OPEN
+*** 41,48 ****
+    , 3
+  );
+  ok 1
+  SELECT finish();
+! \echo TRANSACTION INTENTIONALLY LEFT OPEN
+! TRANSACTION INTENTIONALLY LEFT OPEN
   -- vi: expandtab ts=2 sw=2
 - 
---- 45,47 ----
+--- 41,48 ----
+    , 3
+  );
+  ok 1
++ \i @TEST_DIR@/test/pgxntool/finish.sql
+  SELECT finish();
+! \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
+! # TRANSACTION INTENTIONALLY LEFT OPEN!
+  -- vi: expandtab ts=2 sw=2
 
 ======================================================================
 
 rsync -rlpgovP test/results/ test/expected
 sending incremental file list
 pgxntool-test.out
-          1,466 100%    0.00kB/s    0:00:00            1,466 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+          1,587 100%    0.00kB/s    0:00:00            1,587 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
 
-sent 1,589 bytes  received 35 bytes  3,248.00 bytes/sec
-total size is 1,466  speedup is 0.90
+sent 1,710 bytes  received 35 bytes  3,490.00 bytes/sec
+total size is 1,587  speedup is 0.91
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
