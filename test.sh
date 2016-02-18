@@ -32,7 +32,10 @@ out () {
   # NOTE: Thes MUST be error condition tests (|| instead of &&) or else our ERR trap will fire and we'll exit
   [ -z "$verbose" ] || echo '######################################'
   echo '#' $*
-  echo '#' $* >&6
+
+  # If we were passed verbose output then don't output unless in verbose mode.
+  # Remember we need to invert everything because of ||
+  [ -n "$verbose" -a -z "$verboseout" ] || echo '#' $* >&6
   [ -z "$verbose" ] || echo '######################################'
 }
 
@@ -86,13 +89,17 @@ make pgtap || exit 1
 out Copy stuff from template to where it normally lives
 cp -R t/* .
 
-# Add extension as a dep
-echo 'CREATE EXTENSION "pgxntool-test";' >> test/deps.sql
-
 out Plain make
 make || exit 1
 
-out make test
+out First make test should fail due to not installing
+make test
+out -v ^^^ Should FAIL! ^^^
+
+out Add extension to deps.sql
+echo 'CREATE EXTENSION "pgxntool-test";' >> test/deps.sql
+
+out Run make test again
 make test || exit 1
 out -v ^^^ Should be clean output ^^^
 
@@ -106,7 +113,7 @@ make test
 out -v ^^^ Should have a diff ^^^
 make results
 make test
-out -v ^^^ Should be clean output ^^^
+out -v ^^^ Should be clean output, BUT NOTE THERE WILL BE A FAILURE DIRECTLY ABOVE! ^^^
 
 # Restore stdout and close FD #6
 exec >&6 6>&-
@@ -121,7 +128,7 @@ sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
   $LOG
 
 # Since diff will exit non-zero if there's a delta, change our error trap
-trap "echo 'Unexpected output. Please run'; echo 'cat $LOG.diff'; echo 'to see it.'; echo" ERR
+trap "echo 'Unexpected output. Re-run with $0 -v or run'; echo 'cat $LOG.diff'; echo 'to see it.'; echo" ERR
 diff -u $BASEDIR/expected.out $LOG > $LOG.diff
 
 echo 
