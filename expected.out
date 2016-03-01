@@ -1,25 +1,17 @@
 # Cloning tree
 # Doing subtree add
 git fetch @PGXNREPO@ @PGXNBRANCH@
+# Making checkout dirty
+# Verify setup.sh errors out
+diff --git a/garbage b/garbage
+new file mode 100644
+index 0000000..e69de29
 # Running setup.sh
 Copying pgxntool/_.gitignore to .gitignore and adding to git
 Copying pgxntool/META.in.json to META.in.json and adding to git
 Creating Makefile
 pgxntool/build_meta.sh META.in.json META.json
 Copying ../pgxntool/test/deps.sql to deps.sql and adding to git
-If you won't be creating C code then you can:
-
-rmdir src
-
-If everything looks good then
-
-git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
-# Run setup.sh again to verify it doesn't over-write things
-.gitignore already exists
-META.in.json already exists
-Makefile already exists
-make: `META.json' is up to date.
-deps.sql already exists
 If you won't be creating C code then you can:
 
 rmdir src
@@ -63,6 +55,19 @@ pgxntool/build_meta.sh META.in.json META.json
  create mode 100644 Makefile
  create mode 100644 test/deps.sql
  create mode 120000 test/pgxntool
+# Run setup.sh again to verify it doesn't over-write things
+.gitignore already exists
+META.in.json already exists
+Makefile already exists
+make: `META.json' is up to date.
+deps.sql already exists
+If you won't be creating C code then you can:
+
+rmdir src
+
+If everything looks good then
+
+git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
 # Try pulling in pgtap
 make: Nothing to be done for `pgtap'.
 # Copy stuff from template to where it normally lives

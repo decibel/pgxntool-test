@@ -61,10 +61,18 @@ cd $TEST_DIR
 out Doing subtree add
 git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH
 
-out Running setup.sh
-pgxntool/setup.sh
+out Making checkout dirty
+touch garbage
+git add garbage
+out Verify setup.sh errors out
+if pgxntool/setup.sh; then
+  echo "setup.sh should have exited non-zero" >&2
+  exit 1
+fi
+git reset HEAD garbage
+rm garbage
 
-out "Run setup.sh again to verify it doesn't over-write things"
+out Running setup.sh
 pgxntool/setup.sh
 
 out -v Status
@@ -82,6 +90,10 @@ make META.json
 
 out git commit
 git commit -am "Test setup"
+
+out "Run setup.sh again to verify it doesn't over-write things"
+pgxntool/setup.sh
+git diff --exit-code
 
 out Try pulling in pgtap
 make pgtap || exit 1
