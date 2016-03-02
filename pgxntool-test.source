@@ -1,0 +1,42 @@
+\i @abs_srcdir@/pgxntool/setup.sql
+\i test/pgxntool/psql.sql
+-- No status messages
+\set QUIET true
+-- Verbose error messages
+\set VERBOSITY verbose
+-- Revert all changes on failure.
+\set ON_ERROR_ROLLBACK 1
+\set ON_ERROR_STOP true
+BEGIN;
+-- I suspect it's a bad idea to have deps on pgTap...
+\i test/deps.sql
+-- Note: pgTap is loaded by setup.sql
+-- Add any test dependency statements here
+CREATE EXTENSION "pgxntool-test";
+\i test/pgxntool/tap_setup.sql
+\i test/pgxntool/psql.sql
+-- No status messages
+\set QUIET true
+-- Verbose error messages
+\set VERBOSITY verbose
+-- Revert all changes on failure.
+\set ON_ERROR_ROLLBACK 1
+\set ON_ERROR_STOP true
+CREATE SCHEMA IF NOT EXISTS tap;
+SET search_path = tap, public;
+CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
+\pset format unaligned
+\pset tuples_only true
+\pset pager
+SELECT plan(1);
+1..1
+SELECT is(
+  "pgxntool-test"(1,2)
+  , 3
+);
+ok 1
+\i @abs_srcdir@/pgxntool/finish.sql
+SELECT finish();
+\echo # TRANSACTION INTENTIONALLY LEFT OPEN!
+# TRANSACTION INTENTIONALLY LEFT OPEN!
+-- vi: expandtab ts=2 sw=2

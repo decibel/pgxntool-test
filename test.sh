@@ -111,14 +111,19 @@ out -v ^^^ Should FAIL! ^^^
 out Add extension to deps.sql
 echo 'CREATE EXTENSION "pgxntool-test";' >> test/deps.sql
 
+out And copy expected output file to output dir that should now exist
+cp $BASEDIR/pgxntool-test.source test/output
+
 out Run make test again
 make test || exit 1
 out -v ^^^ Should be clean output ^^^
 
+out Remove input and output directories, make sure output is not recreated
+rm -rf $TEST_DIR/test/input $TEST_DIR/test/output
+make test
+
 # Mess with output to test make results
 echo >> $TEST_DIR/test/expected/pgxntool-test.out
-# Need to remove this so the regression test doesn't overwrite expected/pgxntool-test.out
-rm -rf $TEST_DIR/test/output
 
 out Test make results
 make test

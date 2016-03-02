@@ -124,35 +124,48 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
-*** 12,18 ****
-  \i test/deps.sql
-  -- Note: pgTap is loaded by setup.sql
-  -- Add any test dependency statements here
-- CREATE EXTENSION "pgxntool-test";
-  \i test/pgxntool/tap_setup.sql
-  \i test/pgxntool/psql.sql
-  -- No status messages
---- 12,17 ----
-***************
-*** 34,42 ****
-    "pgxntool-test"(1,2)
-    , 3
-  );
-! ok 1
-! \i @TEST_DIR@/test/pgxntool/finish.sql
-! SELECT finish();
-! \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
-! # TRANSACTION INTENTIONALLY LEFT OPEN!
-! -- vi: expandtab ts=2 sw=2
---- 33,40 ----
-    "pgxntool-test"(1,2)
-    , 3
-  );
-! ERROR:  42883: function pgxntool-test(integer, integer) does not exist
-! LINE 2:   "pgxntool-test"(1,2)
-!           ^
-! HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-! LOCATION:  ParseFuncOrColumn, parse_func.c:523
+*** 0 ****
+--- 1,40 ----
++ \i @TEST_DIR@/test/pgxntool/setup.sql
++ \i test/pgxntool/psql.sql
++ -- No status messages
++ \set QUIET true
++ -- Verbose error messages
++ \set VERBOSITY verbose
++ -- Revert all changes on failure.
++ \set ON_ERROR_ROLLBACK 1
++ \set ON_ERROR_STOP true
++ BEGIN;
++ -- I suspect it's a bad idea to have deps on pgTap...
++ \i test/deps.sql
++ -- Note: pgTap is loaded by setup.sql
++ -- Add any test dependency statements here
++ \i test/pgxntool/tap_setup.sql
++ \i test/pgxntool/psql.sql
++ -- No status messages
++ \set QUIET true
++ -- Verbose error messages
++ \set VERBOSITY verbose
++ -- Revert all changes on failure.
++ \set ON_ERROR_ROLLBACK 1
++ \set ON_ERROR_STOP true
++ CREATE SCHEMA IF NOT EXISTS tap;
++ SET search_path = tap, public;
++ CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
++ \pset format unaligned
++ \pset tuples_only true
++ \pset pager
++ SELECT plan(1);
++ 1..1
++ SELECT is(
++   "pgxntool-test"(1,2)
++   , 3
++ );
++ ERROR:  42883: function pgxntool-test(integer, integer) does not exist
++ LINE 2:   "pgxntool-test"(1,2)
++           ^
++ HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
++ LOCATION:  ParseFuncOrColumn, parse_func.c:523
 
 ======================================================================
 
@@ -160,6 +173,7 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 # ^^^ Should FAIL! ^^^
 ######################################
 # Add extension to deps.sql
+# And copy expected output file to output dir that should now exist
 # Run make test again
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
@@ -185,6 +199,28 @@ test pgxntool-test            ... ok
 ######################################
 # ^^^ Should be clean output ^^^
 ######################################
+# Remove input and output directories, make sure output is not recreated
+rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf results/ regression.diffs regression.out tmp_check/ log/
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
+/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+(using postmaster on Unix socket, default port)
+============== dropping database "contrib_regression" ==============
+DROP DATABASE
+============== creating database "contrib_regression" ==============
+CREATE DATABASE
+ALTER DATABASE
+============== installing plpgsql                     ==============
+CREATE LANGUAGE
+============== running regression test queries        ==============
+test pgxntool-test            ... ok
+
+=====================
+ All 1 tests passed. 
+=====================
+
 # Test make results
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
