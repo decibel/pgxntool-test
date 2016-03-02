@@ -121,6 +121,7 @@ out -v ^^^ Should be clean output ^^^
 out Remove input and output directories, make sure output is not recreated
 rm -rf $TEST_DIR/test/input $TEST_DIR/test/output
 make test
+[ ! -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory exists!"; exit 1)
 
 # Mess with output to test make results
 echo >> $TEST_DIR/test/expected/pgxntool-test.out
