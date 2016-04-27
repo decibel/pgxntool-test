@@ -1,4 +1,5 @@
 # Cloning tree
+Branch master set up to track remote branch master from origin.
 # Doing subtree add
 git fetch @PGXNREPO@ @PGXNBRANCH@
 # Making checkout dirty
@@ -58,16 +59,26 @@ Changes to be committed:
 	new file:   test/pgxntool
 
 # Initial make produces error for now
+@GIT COMMIT@ Commit ugly hack so make dist works
+ 1 file changed, 24 insertions(+)
+ create mode 100644 .gitignore
 pgxntool/build_meta.sh META.in.json META.json
 # git commit
-@GIT COMMIT@
- 6 files changed, 238 insertions(+)
- create mode 100644 .gitignore
+@GIT COMMIT@ Test setup
+ 5 files changed, 215 insertions(+)
  create mode 100644 META.in.json
  create mode 100644 META.json
  create mode 100644 Makefile
  create mode 100644 test/deps.sql
  create mode 120000 test/pgxntool
+# Test creating a release
+git branch 0.1.0
+git push --set-upstream origin 0.1.0
+Branch 0.1.0 set up to track remote branch 0.1.0 from origin.
+git archive --prefix=pgxntool-test-0.1.0/ -o ../pgxntool-test-0.1.0.zip 0.1.0
+pgxntool-test-0.1.0/t/TEST_DOC.asc
+# Making sure ONLY TEST_DOC.asc is in the distribution
+pgxntool-test-0.1.0/t/TEST_DOC.asc
 # Run setup.sh again to verify it doesn't over-write things
 .gitignore already exists
 META.in.json already exists
@@ -75,14 +86,9 @@ Makefile already exists
 make: `META.json' is up to date.
 deps.sql already exists
 On branch master
-Your branch is ahead of 'origin/master' by 3 commits.
+Your branch is ahead of 'origin/master' by 4 commits.
   (use "git push" to publish your local commits)
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	../META.in.json.bak
-
-nothing added to commit but untracked files present (use "git add" to track)
+nothing to commit, working directory clean
 If you won't be creating C code then you can:
 
 rmdir src
@@ -96,7 +102,7 @@ make: Nothing to be done for `pgtap'.
 # Plain make
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 # First make test should fail due to not installing
-rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf ../pgxntool-test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
@@ -302,10 +308,10 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 rsync -rlpgovP test/results/ test/expected
 sending incremental file list
 pgxntool-test.out
-          1,213 100%    0.00kB/s    0:00:00            1,213 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+          1,223 100%    0.00kB/s    0:00:00            1,223 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
 
-sent 1,336 bytes  received 35 bytes  2,742.00 bytes/sec
-total size is 1,213  speedup is 0.88
+sent 1,346 bytes  received 35 bytes  2,762.00 bytes/sec
+total size is 1,223  speedup is 0.89
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql

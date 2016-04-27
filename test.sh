@@ -44,6 +44,11 @@ LOG=`mktemp -t pgxntool-test.XXXXXX.log`
 [ $? -eq 0 ] || exit 1
 TEST_DIR=`mktemp -d -t pgxntool-test.XXXXXX`
 [ $? -eq 0 ] || exit 1
+
+# Need to do this so that make dist isn't cluttering up a higher level directory
+TEST_DIR=$TEST_DIR/repo
+mkdir $TEST_DIR || exit 1
+
 trap "echo PTD='$TEST_DIR' >&2; echo LOG='$LOG' >&2" EXIT
 
 # Save stdout
@@ -58,6 +63,13 @@ fi
 out Cloning tree
 git clone $TEST_TEMPLATE $TEST_DIR
 cd $TEST_DIR
+
+# Before we do anything else, change origin to something BS so we don't accidentally screw up the real test repo
+git init --bare ../fake_repo > /dev/null
+git remote remove origin
+git remote add origin ../fake_repo
+git push --set-upstream origin master
+
 out Doing subtree add
 git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH
 
@@ -85,11 +97,23 @@ out Initial make produces error for now
 # Need to sleep 1 second otherwise make won't pickup new timestamp
 sleep 1
 sed -i .bak -f $BASEDIR/META.in.json.sed META.in.json
+echo META.in.json.bak >> .gitignore
+git add .gitignore
+git commit -m "Commit ugly hack so make dist works" .gitignore
 make META.json
 # END TODO
 
 out git commit
 git commit -am "Test setup"
+
+# Note: It's easier to do this now than when the checkout is all cluttered
+out Test creating a release
+make dist
+unzip -l ../pgxntool-test-0.1.0.zip | grep .asc | awk '{print $4}'
+# grep exits with 1 if it can't find anything
+out Making sure ONLY TEST_DOC.asc is in the distribution
+unzip -l ../pgxntool-test-0.1.0.zip | grep TEST_DOC.asc | awk '{print $4}'
+[ `unzip -l ../pgxntool-test-0.1.0.zip | grep -c .asc` -eq 1 ] || exit 1
 
 out "Run setup.sh again to verify it doesn't over-write things"
 pgxntool/setup.sh
@@ -140,7 +164,7 @@ exec >&6 6>&-
 # (/private) bit is to filter out some crap OS X adds. The last expression
 # strips timestamps from the diff header.
 sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
-  -e 's/^[master [0-9a-f]+] Test setup/@GIT COMMIT@/' \
+  -e 's/^[master [0-9a-f]+]/@GIT COMMIT@/' \
   -e 's/(@TEST_DIR@[^[:space:]]*).*:.*:.*/\1/' \
   -e "s#^git fetch $PGXNREPO $PGXNBRANCH#git fetch @PGXNREPO@ @PGXNBRANCH@#" \
   $LOG
