@@ -12,6 +12,8 @@ Copying pgxntool/_.gitignore to .gitignore and adding to git
 Copying pgxntool/META.in.json to META.in.json and adding to git
 Creating Makefile
 pgxntool/build_meta.sh META.in.json META.json
+pgxntool/meta.mk.sh META.json >meta.mk
+make: `META.json' is up to date.
 Copying ../pgxntool/test/deps.sql to deps.sql and adding to git
 On branch master
 Your branch is ahead of 'origin/master' by 2 commits.
@@ -39,6 +41,7 @@ git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
 META.in.json
 META.json
 Makefile
+meta.mk
 pgxntool
 pgxntool-test.control
 sql
@@ -60,12 +63,14 @@ Changes to be committed:
 
 # Initial make produces error for now
 @GIT COMMIT@ Commit ugly hack so make dist works
- 1 file changed, 24 insertions(+)
+ 1 file changed, 27 insertions(+)
  create mode 100644 .gitignore
 pgxntool/build_meta.sh META.in.json META.json
+pgxntool/meta.mk.sh META.json >meta.mk
+make: `META.json' is up to date.
 # git commit
 @GIT COMMIT@ Test setup
- 5 files changed, 215 insertions(+)
+ 5 files changed, 221 insertions(+)
  create mode 100644 META.in.json
  create mode 100644 META.json
  create mode 100644 Makefile
@@ -75,10 +80,10 @@ pgxntool/build_meta.sh META.in.json META.json
 git branch 0.1.0
 git push --set-upstream origin 0.1.0
 Branch 0.1.0 set up to track remote branch 0.1.0 from origin.
-git archive --prefix=pgxntool-test-0.1.0/ -o ../pgxntool-test-0.1.0.zip 0.1.0
-pgxntool-test-0.1.0/t/TEST_DOC.asc
+git archive --prefix=distribution_test-0.1.0/ -o ../distribution_test-0.1.0.zip 0.1.0
+distribution_test-0.1.0/t/TEST_DOC.asc
 # Making sure ONLY TEST_DOC.asc is in the distribution
-pgxntool-test-0.1.0/t/TEST_DOC.asc
+distribution_test-0.1.0/t/TEST_DOC.asc
 # Run setup.sh again to verify it doesn't over-write things
 .gitignore already exists
 META.in.json already exists
@@ -100,9 +105,9 @@ git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
 make: Nothing to be done for `pgtap'.
 # Copy stuff from template to where it normally lives
 # Plain make
-cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+make: `META.json' is up to date.
 # First make test should fail due to not installing
-rm -rf ../pgxntool-test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
+rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
