@@ -1,2 +1,2 @@
-s/EXTENSION NAME/pgxntool-test/
-s/"name": ""/"name": "pgxntool-test"/
+s/DISTRIBUTION_NAME/distribution_test/
+s/EXTENSION_NAME/pgxntool-test/

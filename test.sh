@@ -13,6 +13,9 @@ PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
 PGXNREPO=${PGXNREPO:-${2:-$BASEDIR/../pgxntool}}
 TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
 
+DISTRIBUTION_NAME=distribution_test
+EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
+
 find_repo () {
   if ! echo $1 | egrep -q '^(git|https?):'; then
     cd $1
@@ -96,7 +99,7 @@ git diff
 out Initial make produces error for now
 # Need to sleep 1 second otherwise make won't pickup new timestamp
 sleep 1
-sed -i .bak -f $BASEDIR/META.in.json.sed META.in.json
+sed -i .bak -e "s/DISTRIBUTION_NAME/$DISTRIBUTION_NAME/" -e "s/EXTENSION_NAME/$EXTENSION_NAME/" META.in.json
 echo META.in.json.bak >> .gitignore
 git add .gitignore
 git commit -m "Commit ugly hack so make dist works" .gitignore
@@ -109,11 +112,11 @@ git commit -am "Test setup"
 # Note: It's easier to do this now than when the checkout is all cluttered
 out Test creating a release
 make dist
-unzip -l ../pgxntool-test-0.1.0.zip | grep .asc | awk '{print $4}'
+unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep .asc | awk '{print $4}'
 # grep exits with 1 if it can't find anything
 out Making sure ONLY TEST_DOC.asc is in the distribution
-unzip -l ../pgxntool-test-0.1.0.zip | grep TEST_DOC.asc | awk '{print $4}'
-[ `unzip -l ../pgxntool-test-0.1.0.zip | grep -c .asc` -eq 1 ] || exit 1
+unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep TEST_DOC.asc | awk '{print $4}'
+[ `unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep -c .asc` -eq 1 ] || exit 1
 
 out "Run setup.sh again to verify it doesn't over-write things"
 pgxntool/setup.sh
@@ -133,7 +136,8 @@ make test
 out -v ^^^ Should FAIL! ^^^
 
 out Add extension to deps.sql
-echo 'CREATE EXTENSION "pgxntool-test";' >> test/deps.sql
+quote='"'
+echo "CREATE EXTENSION ${quote}$EXTENSION_NAME${quote};" >> test/deps.sql
 
 out And copy expected output file to output dir that should now exist
 cp $BASEDIR/pgxntool-test.source test/output
