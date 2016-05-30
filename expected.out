@@ -11,8 +11,6 @@ index 0000000..e69de29
 Copying pgxntool/_.gitignore to .gitignore and adding to git
 Copying pgxntool/META.in.json to META.in.json and adding to git
 Creating Makefile
-pgxntool/build_meta.sh META.in.json META.json
-pgxntool/meta.mk.sh META.json >meta.mk
 make: `META.json' is up to date.
 Copying ../pgxntool/test/deps.sql to deps.sql and adding to git
 On branch master
@@ -65,8 +63,6 @@ Changes to be committed:
 @GIT COMMIT@ Commit ugly hack so make dist works
  1 file changed, 27 insertions(+)
  create mode 100644 .gitignore
-pgxntool/build_meta.sh META.in.json META.json
-pgxntool/meta.mk.sh META.json >meta.mk
 make: `META.json' is up to date.
 # git commit
 @GIT COMMIT@ Test setup
