@@ -110,9 +110,9 @@ make: `META.json' is up to date.
 rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
-/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+/bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='@PG_LOCATION@/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
 DROP DATABASE
@@ -189,9 +189,9 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
-/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+/bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='@PG_LOCATION@/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
 DROP DATABASE
@@ -214,9 +214,9 @@ test pgxntool-test            ... ok
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
-/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+/bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='@PG_LOCATION@/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
 DROP DATABASE
@@ -236,9 +236,9 @@ test pgxntool-test            ... ok
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
-/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+/bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='@PG_LOCATION@/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
 DROP DATABASE
@@ -276,9 +276,9 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
-/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+/bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='@PG_LOCATION@/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
 DROP DATABASE
@@ -320,9 +320,9 @@ total size is 1,223  speedup is 0.89
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-/bin/sh /Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../config/install-sh -c -d '/Users/decibel/pgsql/HEAD/i/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '/Users/decibel/pgsql/HEAD/i/share/extension/'
-/Users/decibel/pgsql/HEAD/i/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='/Users/decibel/pgsql/HEAD/i/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
+/bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
+/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress --inputdir=./ --bindir='@PG_LOCATION@/bin'    --inputdir=test --outputdir=test --load-language=plpgsql --dbname=contrib_regression pgxntool-test 
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
 DROP DATABASE

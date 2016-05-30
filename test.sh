@@ -16,6 +16,8 @@ TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
 DISTRIBUTION_NAME=distribution_test
 EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
 
+PG_LOCATION=`pg_config --bindir | sed 's#/bin##'`
+
 find_repo () {
   if ! echo $1 | egrep -q '^(git|https?):'; then
     cd $1
@@ -170,6 +172,7 @@ exec >&6 6>&-
 sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
   -e 's/^[master [0-9a-f]+]/@GIT COMMIT@/' \
   -e 's/(@TEST_DIR@[^[:space:]]*).*:.*:.*/\1/' \
+  -e "s#$PG_LOCATION#@PG_LOCATION@#g" \
   -e "s#^git fetch $PGXNREPO $PGXNBRANCH#git fetch @PGXNREPO@ @PGXNBRANCH@#" \
   $LOG
 
