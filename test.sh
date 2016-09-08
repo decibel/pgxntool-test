@@ -134,12 +134,19 @@ out Plain make
 make || exit 1
 
 out First make test should fail due to not installing
+set +o errexit
 make test
+set -o errexit
 out -v ^^^ Should FAIL! ^^^
 
 out Add extension to deps.sql
 quote='"'
 echo "CREATE EXTENSION ${quote}$EXTENSION_NAME${quote};" >> test/deps.sql
+
+out Make certain test/output gets created
+make test
+[ -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory does not exist!"; exit 1)
+[ -d $TEST_DIR/test/output ] || (out "ERROR! test/output is not a directory!"; exit 1)
 
 out And copy expected output file to output dir that should now exist
 cp $BASEDIR/pgxntool-test.source test/output
