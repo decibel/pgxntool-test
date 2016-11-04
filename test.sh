@@ -173,20 +173,18 @@ out -v ^^^ Should be clean output, BUT NOTE THERE WILL BE A FAILURE DIRECTLY ABO
 # Restore stdout and close FD #6
 exec >&6 6>&-
 
+cp $BASEDIR/expected.sed $TEST_DIR/
+if [ `psql -qtc "SELECT current_setting('server_version_num')::int < 90200"` == t ]; then
+  echo "s!rm -f  sql/pgxntool-test--0.1.0.sql!rm -rf  sql/pgxntool-test--0.1.0.sql!" >> $TEST_DIR/expected.sed
+  echo "s!rm -f ../distribution_test!rm -rf ../distribution_test!" >> $TEST_DIR/expected.sed
+fi
 # Need to strip out temporary path and git hashes out of the log file. The
-# (/private) bit is to filter out some crap OS X adds. The last expression
-# strips timestamps from the diff header.
-sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
-  -e 's/^[master [0-9a-f]+]/@GIT COMMIT@/' \
-  -e 's/(@TEST_DIR@[^[:space:]]*).*:.*:.*/\1/' \
-  -e "s#$PG_LOCATION#@PG_LOCATION@#g" \
+# (/private) bit is to filter out some crap OS X adds.
+sed -i .bak -E \
+  -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
   -e "s#^git fetch $PGXNREPO $PGXNBRANCH#git fetch @PGXNREPO@ @PGXNBRANCH@#" \
-  -e "s!.*kB/s    0:00:00 \(xfr#1, to-chk=0/2\)!RSYNC OUTPUT!" \
-  -e "s/^set [,0-9]{4,5} bytes.*/RSYNC OUTPUT/" \
-  -e "s/(LOCATION:  [^,]+, [^:]+:).*/\1####/" \
-  -e "s#@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress.*#INVOCATION OF pg_regress#" \
-  -e "s#((/bin/sh )?@PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh)|(/usr/bin/install)#@INSTALL@#" \
-  -e "s#([^:])//+#\1/#g" \
+  -e "s#$PG_LOCATION#@PG_LOCATION@#g" \
+  -f $TEST_DIR/expected.sed \
   $LOG
 
 # Since diff will exit non-zero if there's a delta, change our error trap
