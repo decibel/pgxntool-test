@@ -66,7 +66,7 @@ Changes to be committed:
 make: `META.json' is up to date.
 # git commit
 @GIT COMMIT@ Test setup
- 5 files changed, 221 insertions(+)
+ 5 files changed, 233 insertions(+)
  create mode 100644 META.in.json
  create mode 100644 META.json
  create mode 100644 Makefile
@@ -132,7 +132,7 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
 *** 0 ****
---- 1,40 ----
+--- 1,60 ----
 + \i @TEST_DIR@/test/pgxntool/setup.sql
 + \i test/pgxntool/psql.sql
 + -- No status messages
@@ -143,10 +143,6 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 + \set ON_ERROR_ROLLBACK 1
 + \set ON_ERROR_STOP true
 + BEGIN;
-+ -- I suspect it's a bad idea to have deps on pgTap...
-+ \i test/deps.sql
-+ -- Note: pgTap is loaded by setup.sql
-+ -- Add any test dependency statements here
 + \i test/pgxntool/tap_setup.sql
 + \i test/pgxntool/psql.sql
 + -- No status messages
@@ -156,12 +152,36 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 + -- Revert all changes on failure.
 + \set ON_ERROR_ROLLBACK 1
 + \set ON_ERROR_STOP true
-+ CREATE SCHEMA IF NOT EXISTS tap;
++ SET client_min_messages = WARNING;
++ DO $$
++ BEGIN
++ IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname='tap') THEN
++   CREATE SCHEMA tap;
++ END IF;
++ END$$;
 + SET search_path = tap, public;
 + CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
++ SET client_min_messages = NOTICE;
 + \pset format unaligned
 + \pset tuples_only true
 + \pset pager
++ -- vi: expandtab ts=2 sw=2
++ \i test/deps.sql
++ -- IF NOT EXISTS will emit NOTICEs, which is annoying
++ SET client_min_messages = WARNING;
++ -- Add any test dependency statements here
++ -- Note: pgTap is loaded by setup.sql
++ --CREATE EXTENSION IF NOT EXISTS ...;
++ /*
++  * Now load our extension. We don't use IF NOT EXISTs here because we want an
++  * error if the extension is already loaded (because we want to ensure we're
++  * getting the very latest version).
++  */
++ CREATE EXTENSION ...;
++ psql:test/deps.sql:12: ERROR:  42601: syntax error at or near ".."
++ LINE 6: CREATE EXTENSION ...;
++                          ^
++ LOCATION:  scanner_yyerror, scan.l:1087
 + SELECT plan(1);
 + 1..1
 + SELECT is(
@@ -210,7 +230,7 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
 *** 0 ****
---- 1,42 ----
+--- 1,59 ----
 + \i @TEST_DIR@/test/pgxntool/setup.sql
 + \i test/pgxntool/psql.sql
 + -- No status messages
@@ -221,11 +241,6 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 + \set ON_ERROR_ROLLBACK 1
 + \set ON_ERROR_STOP true
 + BEGIN;
-+ -- I suspect it's a bad idea to have deps on pgTap...
-+ \i test/deps.sql
-+ -- Note: pgTap is loaded by setup.sql
-+ -- Add any test dependency statements here
-+ CREATE EXTENSION "pgxntool-test";
 + \i test/pgxntool/tap_setup.sql
 + \i test/pgxntool/psql.sql
 + -- No status messages
@@ -235,12 +250,34 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 + -- Revert all changes on failure.
 + \set ON_ERROR_ROLLBACK 1
 + \set ON_ERROR_STOP true
-+ CREATE SCHEMA IF NOT EXISTS tap;
++ SET client_min_messages = WARNING;
++ DO $$
++ BEGIN
++ IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname='tap') THEN
++   CREATE SCHEMA tap;
++ END IF;
++ END$$;
 + SET search_path = tap, public;
 + CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
++ SET client_min_messages = NOTICE;
 + \pset format unaligned
 + \pset tuples_only true
 + \pset pager
++ -- vi: expandtab ts=2 sw=2
++ \i test/deps.sql
++ -- IF NOT EXISTS will emit NOTICEs, which is annoying
++ SET client_min_messages = WARNING;
++ -- Add any test dependency statements here
++ -- Note: pgTap is loaded by setup.sql
++ --CREATE EXTENSION IF NOT EXISTS ...;
++ /*
++  * Now load our extension. We don't use IF NOT EXISTs here because we want an
++  * error if the extension is already loaded (because we want to ensure we're
++  * getting the very latest version).
++  */
++ CREATE EXTENSION "pgxntool-test";
++ -- Re-enable notices
++ SET client_min_messages = NOTICE;
 + SELECT plan(1);
 + 1..1
 + SELECT is(
@@ -333,12 +370,12 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
-*** 40,43 ****
+*** 57,60 ****
   \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
   # TRANSACTION INTENTIONALLY LEFT OPEN!
   -- vi: expandtab ts=2 sw=2
 - 
---- 40,42 ----
+--- 57,59 ----
 
 ======================================================================
 
@@ -373,22 +410,22 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
-*** 40,43 ****
+*** 57,60 ****
   \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
   # TRANSACTION INTENTIONALLY LEFT OPEN!
   -- vi: expandtab ts=2 sw=2
 - 
---- 40,42 ----
+--- 57,59 ----
 
 ======================================================================
 
 rsync -rlpgovP test/results/ test/expected
 sending incremental file list
 pgxntool-test.out
-          1,223 100%    0.00kB/s    0:00:00            1,223 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+RSYNC OUTPUT
 
-sent 1,346 bytes  received 35 bytes  2,762.00 bytes/sec
-total size is 1,223  speedup is 0.89
+sent 1,851 bytes  received 35 bytes  3,772.00 bytes/sec
+total size is 1,728  speedup is 0.92
 rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
