@@ -185,6 +185,7 @@ sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
   -e "s/^set [,0-9]{4,5} bytes.*/RSYNC OUTPUT/" \
   -e "s/(LOCATION:  [^,]+, [^:]+:).*/\1####/" \
   -e "s#@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress.*#INVOCATION OF pg_regress#" \
+  -e "s#((/bin/sh )?@PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh)|(/usr/bin/install)#@INSTALL@#" \
   -e "s#([^:])//+#\1/#g" \
   $LOG
 
