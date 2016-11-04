@@ -183,8 +183,9 @@ sed -i .bak -E -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
   -e "s#^git fetch $PGXNREPO $PGXNBRANCH#git fetch @PGXNREPO@ @PGXNBRANCH@#" \
   -e "s!.*kB/s    0:00:00 \(xfr#1, to-chk=0/2\)!RSYNC OUTPUT!" \
   -e "s/^set [,0-9]{4,5} bytes.*/RSYNC OUTPUT/" \
-  -e "s/LOCATION:  scanner_yyerror, scan.l:.*/LOCATION:  scanner_yyerror, scan.l:####/" \
+  -e "s/(LOCATION:  [^,]+, [^:]+:).*/\1####/" \
   -e "s#@PG_LOCATION@/lib/pgxs/src/makefiles/../../src/test/regress/pg_regress.*#INVOCATION OF pg_regress#" \
+  -e "s#([^:])//+#\1/#g" \
   $LOG
 
 # Since diff will exit non-zero if there's a delta, change our error trap

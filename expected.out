@@ -107,7 +107,7 @@ rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -192,7 +192,7 @@ above is saved in the file "@TEST_DIR@/test/regression.out".
 + LINE 2:   "pgxntool-test"(1,2)
 +           ^
 + HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-+ LOCATION:  ParseFuncOrColumn, parse_func.c:523
++ LOCATION:  ParseFuncOrColumn, parse_func.c:####
 
 ======================================================================
 
@@ -205,7 +205,7 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -299,7 +299,7 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -324,7 +324,7 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -346,7 +346,7 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -386,7 +386,7 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -430,7 +430,7 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 /bin/sh @PG_LOCATION@/lib/pgxs/src/makefiles/../../config/install-sh -c -d '@PG_LOCATION@/share/extension'
-/usr/bin/install -c -m 644 .//sql/pgxntool-test--0.1.0.sql .//sql/pgxntool-test--0.1.0--0.1.1.sql .//pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+/usr/bin/install -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
