@@ -1,6 +1,6 @@
 #!/bin/bash
 
-trap 'echo "$BASH_SOURCE: line $LINENO" >&2' ERR
+trap 'echo "ERROR: $BASH_SOURCE: line $LINENO" >&2' ERR
 set -o errexit -o errtrace -o pipefail
 #set -o xtrace -o verbose
 
@@ -33,10 +33,6 @@ TEST_DIR=$TEST_DIR/repo
 
 cd $TEST_DIR
 
-#head_log BEFORE "'out RUNNING TESTS'"
-out RUNNING TESTS
-#head_log AFTER "'out RUNNING TESTS'"
-
 out Making checkout dirty
 touch garbage
 git add garbage
@@ -56,19 +52,16 @@ ls
 git status
 git diff
 
-# TODO: remove once makefile properly handles META.in
-out Initial make produces error for now
-# Need to sleep 1 second otherwise make won't pickup new timestamp
-sleep 1
-sed -i .bak -e "s/DISTRIBUTION_NAME/$DISTRIBUTION_NAME/" -e "s/EXTENSION_NAME/$EXTENSION_NAME/" META.in.json
-echo META.in.json.bak >> .gitignore
-git add .gitignore
-git commit -m "Commit ugly hack so make dist works" .gitignore
-make META.json
-# END TODO
-
 out git commit
 git commit -am "Test setup"
+
+out Verify changing META.in.json works
+# Need to sleep 1 second otherwise make won't pickup new timestamp
+sleep 1
+sed -i '' -e "s/DISTRIBUTION_NAME/$DISTRIBUTION_NAME/" -e "s/EXTENSION_NAME/$EXTENSION_NAME/" META.in.json
+out -v This make will produce a bogus '"already up to date"' message for some reason
+make
+git commit -am "Change META"
 
 # Note: It's easier to do this now than when the checkout is all cluttered
 out Test creating a release
@@ -83,27 +76,16 @@ out "Run setup.sh again to verify it doesn't over-write things"
 pgxntool/setup.sh
 git diff --exit-code
 
-out Try pulling in pgtap
-make pgtap || exit 1
-
 out Copy stuff from template to where it normally lives
 cp -R t/* .
-
-out Plain make
-make || exit 1
-
-out First make test should fail due to not installing
-set +o errexit
-make test
-set -o errexit
-out -v ^^^ Should FAIL! ^^^
 
 out Add extension to deps.sql
 quote='"'
 sed -i '' -e "s/CREATE EXTENSION \.\.\..*/CREATE EXTENSION ${quote}$EXTENSION_NAME${quote};/" test/deps.sql
 
 out Make certain test/output gets created
-make test
+[ ! -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory should not exist!"; exit 1)
+make test # TODO: ensure this exits non-zero
 [ -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory does not exist!"; exit 1)
 [ -d $TEST_DIR/test/output ] || (out "ERROR! test/output is not a directory!"; exit 1)
 

@@ -1,5 +1,5 @@
 # Cloning tree
-Cloning into '/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.gvNQtR9N/repo'...
+Cloning into '/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.I9Lkgb0h/repo'...
 done.
 To ../fake_repo
  * [new branch]      master -> master
@@ -10,9 +10,6 @@ warning: no common commits
 From /Users/decibel/git/pgxntool
  * branch            master     -> FETCH_HEAD
 Added dir 'pgxntool'
-PTD=/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.gvNQtR9N
-LOG=/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.log.nr5VhCjW
-# RUNNING TESTS
 # Making checkout dirty
 # Verify setup.sh errors out
 diff --git a/garbage b/garbage
@@ -71,19 +68,22 @@ Changes to be committed:
 	new file:   test/deps.sql
 	new file:   test/pgxntool
 
-# Initial make produces error for now
-@GIT COMMIT@ Commit ugly hack so make dist works
- 1 file changed, 27 insertions(+)
- create mode 100644 .gitignore
-make[1]: `META.json' is up to date.
 # git commit
 @GIT COMMIT@ Test setup
- 5 files changed, 233 insertions(+)
+ 6 files changed, 259 insertions(+)
+ create mode 100644 .gitignore
  create mode 100644 META.in.json
  create mode 100644 META.json
  create mode 100644 Makefile
  create mode 100644 test/deps.sql
  create mode 120000 test/pgxntool
+# Verify changing META.in.json works
+######################################
+# This make will produce a bogus "already up to date" message for some reason
+######################################
+make[1]: `META.json' is up to date.
+@GIT COMMIT@ Change META
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 # Test creating a release
 git branch 0.1.0
 git push --set-upstream origin 0.1.0
@@ -111,112 +111,10 @@ rmdir src
 If everything looks good then
 
 git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
-# Try pulling in pgtap
-make[1]: Nothing to be done for `pgtap'.
 # Copy stuff from template to where it normally lives
-# Plain make
-make[1]: `META.json' is up to date.
-# First make test should fail due to not installing
-rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
-rm -rf results/ regression.diffs regression.out tmp_check/ log/
-cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
-@INSTALL@ -c -d '@PG_LOCATION@/share/extension'
-@INSTALL@ -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
-INVOCATION OF pg_regress
-(using postmaster on Unix socket, default port)
-============== dropping database "contrib_regression" ==============
-DROP DATABASE
-============== creating database "contrib_regression" ==============
-CREATE DATABASE
-ALTER DATABASE
-============== installing plpgsql                     ==============
-CREATE LANGUAGE
-============== running regression test queries        ==============
-test pgxntool-test            ... FAILED (test process exited with exit code 3)
-
-======================
- 1 of 1 tests failed. 
-======================
-
-The differences that caused some tests to fail can be viewed in the
-file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
-above is saved in the file "@TEST_DIR@/test/regression.out".
-
-make[1]: [installcheck] Error 1 (ignored)
-*** @TEST_DIR@/test/expected/pgxntool-test.out
---- @TEST_DIR@/test/results/pgxntool-test.out
-***************
-*** 0 ****
---- 1,60 ----
-+ \i @TEST_DIR@/test/pgxntool/setup.sql
-+ \i test/pgxntool/psql.sql
-+ -- No status messages
-+ \set QUIET true
-+ -- Verbose error messages
-+ \set VERBOSITY verbose
-+ -- Revert all changes on failure.
-+ \set ON_ERROR_ROLLBACK 1
-+ \set ON_ERROR_STOP true
-+ BEGIN;
-+ \i test/pgxntool/tap_setup.sql
-+ \i test/pgxntool/psql.sql
-+ -- No status messages
-+ \set QUIET true
-+ -- Verbose error messages
-+ \set VERBOSITY verbose
-+ -- Revert all changes on failure.
-+ \set ON_ERROR_ROLLBACK 1
-+ \set ON_ERROR_STOP true
-+ SET client_min_messages = WARNING;
-+ DO $$
-+ BEGIN
-+ IF NOT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname='tap') THEN
-+   CREATE SCHEMA tap;
-+ END IF;
-+ END$$;
-+ SET search_path = tap, public;
-+ CREATE EXTENSION IF NOT EXISTS pgtap SCHEMA tap;
-+ SET client_min_messages = NOTICE;
-+ \pset format unaligned
-+ \pset tuples_only true
-+ \pset pager
-+ -- vi: expandtab ts=2 sw=2
-+ \i test/deps.sql
-+ -- IF NOT EXISTS will emit NOTICEs, which is annoying
-+ SET client_min_messages = WARNING;
-+ -- Add any test dependency statements here
-+ -- Note: pgTap is loaded by setup.sql
-+ --CREATE EXTENSION IF NOT EXISTS ...;
-+ /*
-+  * Now load our extension. We don't use IF NOT EXISTs here because we want an
-+  * error if the extension is already loaded (because we want to ensure we're
-+  * getting the very latest version).
-+  */
-+ CREATE EXTENSION ...;
-+ psql:test/deps.sql:12: ERROR:  42601: syntax error at or near ".."
-+ LINE 6: CREATE EXTENSION ...;
-+                          ^
-+ LOCATION:  scanner_yyerror, scan.l:####
-+ SELECT plan(1);
-+ 1..1
-+ SELECT is(
-+   "pgxntool-test"(1,2)
-+   , 3
-+ );
-+ ERROR:  42883: function pgxntool-test(integer, integer) does not exist
-+ LINE 2:   "pgxntool-test"(1,2)
-+           ^
-+ HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-+ LOCATION:  ParseFuncOrColumn, parse_func.c:####
-
-======================================================================
-
-######################################
-# ^^^ Should FAIL! ^^^
-######################################
 # Add extension to deps.sql
 # Make certain test/output gets created
-rm -rf  sql/pgxntool-test--0.1.0.sql
+rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 @INSTALL@ -c -d '@PG_LOCATION@/share/extension'
