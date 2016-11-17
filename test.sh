@@ -10,49 +10,32 @@ if [ "$1" == "-v" ]; then
 fi
 BASEDIR=`cd ${0%/*}; pwd`
 
+. $BASEDIR/.env
+#wc $LOG
 . $BASEDIR/lib.sh
-. $BASEDIR/temp.env
+#wc $LOG >&8
 
 PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
 PGXNREPO=${PGXNREPO:-${2:-$BASEDIR/../pgxntool}}
-TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
 
 DISTRIBUTION_NAME=distribution_test
 EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
 
 PG_LOCATION=`pg_config --bindir | sed 's#/bin##'`
 
-TEST_TEMPLATE=`find_repo $TEST_TEMPLATE`
 PGXNREPO=`find_repo $PGXNREPO`
 
 
 # Need to do this so that make dist isn't cluttering up a higher level directory
 TEST_DIR=$TEST_DIR/repo
-mkdir $TEST_DIR || exit 1
 
-trap "echo PTD='$TEST_DIR' >&2; echo LOG='$LOG' >&2" EXIT
+#./setup.sh "$PGXNBRANCH" "$PGXNREPO"
 
-# Save stdout
-exec 6>&1
-if [ -z "$verboseout" ]; then
-  exec > $LOG
-else
-  # Redirect STDOUT to a subproc http://stackoverflow.com/questions/3173131/redirect-copy-of-stdout-to-log-file-from-within-bash-script-itself
-  exec > >(tee -i $LOG)
-fi
-
-out Cloning tree
-git clone $TEST_TEMPLATE $TEST_DIR
 cd $TEST_DIR
 
-# Before we do anything else, change origin to something BS so we don't accidentally screw up the real test repo
-git init --bare ../fake_repo > /dev/null
-git remote remove origin
-git remote add origin ../fake_repo
-git push --set-upstream origin master
-
-out Doing subtree add
-git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH
+#head_log BEFORE "'out RUNNING TESTS'"
+out RUNNING TESTS
+#head_log AFTER "'out RUNNING TESTS'"
 
 out Making checkout dirty
 touch garbage
@@ -146,8 +129,9 @@ make results
 make test
 out -v ^^^ Should be clean output, BUT NOTE THERE WILL BE A FAILURE DIRECTLY ABOVE! ^^^
 
-# Restore stdout and close FD #6
-exec >&6 6>&-
+# Restore stdout and close FD #8. Ditto with stderr
+exec >&8 8>&-
+#exec 2>&9 9>&-
 
 cp $BASEDIR/expected.sed $TEST_DIR/
 if [ `psql -qtc "SELECT current_setting('server_version_num')::int < 90200"` == t ]; then

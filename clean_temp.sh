@@ -5,8 +5,8 @@ set -o errexit -o errtrace -o pipefail
 
 BASEDIR=`cd ${0%/*}; pwd`
 
-. $BASEDIR/temp.env
+. $BASEDIR/.env
 
 rm -rf $LOG
 rm -rf $TMPDIR
-rm $BASEDIR/temp.env
+rm $BASEDIR/.env

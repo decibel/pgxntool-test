@@ -4,24 +4,30 @@ all: test
 #
 # Environment setup
 #
-temp.env: make_temp.sh
-	./make_temp.sh > temp.env
+.env: make_temp.sh
+	./make_temp.sh > .env
+
+env: clean_temp .env
 
 .PHONY: clean_temp
 clean: clean_temp
 clean_temp:
-	[ ! -e temp.env ] || ./clean_temp.sh
+	[ ! -e .env ] || ./clean_temp.sh
 
+CLEAN += .setup
+.setup: setup.sh env lib.sh
+	./setup.sh
+	touch $@
 
 #
 # Tests
 #
 .PHONY: test.sh
-test.sh: temp.env lib.sh
+test.sh: .setup
 	./test.sh
 
 .PHONY: test
-test: clean test.sh
+test: test.sh
 
 clean:
 	rm -rf $(CLEAN)

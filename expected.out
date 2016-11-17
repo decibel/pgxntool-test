@@ -1,12 +1,24 @@
 # Cloning tree
+Cloning into '/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.gvNQtR9N/repo'...
+done.
+To ../fake_repo
+ * [new branch]      master -> master
 Branch master set up to track remote branch master from origin.
 # Doing subtree add
 git fetch @PGXNREPO@ @PGXNBRANCH@
+warning: no common commits
+From /Users/decibel/git/pgxntool
+ * branch            master     -> FETCH_HEAD
+Added dir 'pgxntool'
+PTD=/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.gvNQtR9N
+LOG=/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.log.nr5VhCjW
+# RUNNING TESTS
 # Making checkout dirty
 # Verify setup.sh errors out
 diff --git a/garbage b/garbage
 new file mode 100644
 index 0000000..e69de29
+Git repository is not clean; please commit and try again.
 # Running setup.sh
 Copying pgxntool/_.gitignore to .gitignore and adding to git
 Copying pgxntool/META.in.json to META.in.json and adding to git
@@ -75,6 +87,8 @@ make[1]: `META.json' is up to date.
 # Test creating a release
 git branch 0.1.0
 git push --set-upstream origin 0.1.0
+To ../fake_repo
+ * [new branch]      0.1.0 -> 0.1.0
 Branch 0.1.0 set up to track remote branch 0.1.0 from origin.
 git archive --prefix=distribution_test-0.1.0/ -o ../distribution_test-0.1.0.zip 0.1.0
 distribution_test-0.1.0/t/TEST_DOC.asc
@@ -128,6 +142,7 @@ The differences that caused some tests to fail can be viewed in the
 file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
 above is saved in the file "@TEST_DIR@/test/regression.out".
 
+make[1]: [installcheck] Error 1 (ignored)
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
@@ -226,6 +241,7 @@ The differences that caused some tests to fail can be viewed in the
 file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
 above is saved in the file "@TEST_DIR@/test/regression.out".
 
+make[1]: [installcheck] Error 1 (ignored)
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
@@ -367,6 +383,7 @@ The differences that caused some tests to fail can be viewed in the
 file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
 above is saved in the file "@TEST_DIR@/test/regression.out".
 
+make[1]: [installcheck] Error 1 (ignored)
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
@@ -407,6 +424,7 @@ The differences that caused some tests to fail can be viewed in the
 file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
 above is saved in the file "@TEST_DIR@/test/regression.out".
 
+make[1]: [installcheck] Error 1 (ignored)
 *** @TEST_DIR@/test/expected/pgxntool-test.out
 --- @TEST_DIR@/test/results/pgxntool-test.out
 ***************
