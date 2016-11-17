@@ -11,7 +11,7 @@ index 0000000..e69de29
 Copying pgxntool/_.gitignore to .gitignore and adding to git
 Copying pgxntool/META.in.json to META.in.json and adding to git
 Creating Makefile
-make: `META.json' is up to date.
+make[1]: `META.json' is up to date.
 Copying ../pgxntool/test/deps.sql to deps.sql and adding to git
 On branch master
 Your branch is ahead of 'origin/master' by 2 commits.
@@ -63,7 +63,7 @@ Changes to be committed:
 @GIT COMMIT@ Commit ugly hack so make dist works
  1 file changed, 27 insertions(+)
  create mode 100644 .gitignore
-make: `META.json' is up to date.
+make[1]: `META.json' is up to date.
 # git commit
 @GIT COMMIT@ Test setup
  5 files changed, 233 insertions(+)
@@ -84,7 +84,7 @@ distribution_test-0.1.0/t/TEST_DOC.asc
 .gitignore already exists
 META.in.json already exists
 Makefile already exists
-make: `META.json' is up to date.
+make[1]: `META.json' is up to date.
 deps.sql already exists
 On branch master
 Your branch is ahead of 'origin/master' by 4 commits.
@@ -98,10 +98,10 @@ If everything looks good then
 
 git commit -am 'Add pgxntool (https://github.com/decibel/pgxntool/tree/release)'
 # Try pulling in pgtap
-make: Nothing to be done for `pgtap'.
+make[1]: Nothing to be done for `pgtap'.
 # Copy stuff from template to where it normally lives
 # Plain make
-make: `META.json' is up to date.
+make[1]: `META.json' is up to date.
 # First make test should fail due to not installing
 rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/

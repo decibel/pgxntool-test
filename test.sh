@@ -9,6 +9,10 @@ if [ "$1" == "-v" ]; then
   shift
 fi
 BASEDIR=`cd ${0%/*}; pwd`
+
+. $BASEDIR/lib.sh
+. $BASEDIR/temp.env
+
 PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
 PGXNREPO=${PGXNREPO:-${2:-$BASEDIR/../pgxntool}}
 TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
@@ -18,37 +22,9 @@ EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
 
 PG_LOCATION=`pg_config --bindir | sed 's#/bin##'`
 
-find_repo () {
-  if ! echo $1 | egrep -q '^(git|https?):'; then
-    cd $1
-    pwd
-  fi
-}
-
 TEST_TEMPLATE=`find_repo $TEST_TEMPLATE`
 PGXNREPO=`find_repo $PGXNREPO`
 
-out () {
-  if [ "$1" == "-v" ]; then
-    local verbose=1
-    shift
-  fi
-
-  # NOTE: Thes MUST be error condition tests (|| instead of &&) or else our ERR trap will fire and we'll exit
-  [ -z "$verbose" ] || echo '######################################'
-  echo '#' $*
-
-  # If we were passed verbose output then don't output unless in verbose mode.
-  # Remember we need to invert everything because of ||
-  [ -n "$verbose" -a -z "$verboseout" ] || echo '#' $* >&6
-  [ -z "$verbose" ] || echo '######################################'
-}
-
-TMPDIR=${TMPDIR:-${TEMP:-$TMP}}
-LOG=`mktemp -t pgxntool-test.XXXXXX.log`
-[ $? -eq 0 ] || exit 1
-TEST_DIR=`mktemp -d -t pgxntool-test.XXXXXX`
-[ $? -eq 0 ] || exit 1
 
 # Need to do this so that make dist isn't cluttering up a higher level directory
 TEST_DIR=$TEST_DIR/repo
