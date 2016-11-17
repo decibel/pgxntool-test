@@ -15,8 +15,8 @@ clean_temp:
 	[ ! -e .env ] || ./clean_temp.sh
 
 CLEAN += .setup
-.setup: setup.sh env lib.sh
-	./setup.sh
+.setup: clone.sh env lib.sh
+	./clone.sh
 	touch $@
 
 #

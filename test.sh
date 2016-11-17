@@ -29,7 +29,7 @@ PGXNREPO=`find_repo $PGXNREPO`
 # Need to do this so that make dist isn't cluttering up a higher level directory
 TEST_DIR=$TEST_DIR/repo
 
-#./setup.sh "$PGXNBRANCH" "$PGXNREPO"
+#./clone.sh "$PGXNBRANCH" "$PGXNREPO"
 
 cd $TEST_DIR
 
