@@ -1,15 +1,3 @@
-# Cloning tree
-Cloning into '/var/folders/mg/s6jx45m50zd32sy8mt60lk_00000gq/T/pgxntool-test.XXXXXX.I9Lkgb0h/repo'...
-done.
-To ../fake_repo
- * [new branch]      master -> master
-Branch master set up to track remote branch master from origin.
-# Doing subtree add
-git fetch @PGXNREPO@ @PGXNBRANCH@
-warning: no common commits
-From /Users/decibel/git/pgxntool
- * branch            master     -> FETCH_HEAD
-Added dir 'pgxntool'
 # Making checkout dirty
 # Verify setup.sh errors out
 diff --git a/garbage b/garbage
@@ -136,16 +124,16 @@ test pgxntool-test            ... FAILED
 ======================
 
 The differences that caused some tests to fail can be viewed in the
-file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
-above is saved in the file "@TEST_DIR@/test/regression.out".
+file "@TEST_DIR@/repo/test/regression.diffs".  A copy of the test summary that you see
+above is saved in the file "@TEST_DIR@/repo/test/regression.out".
 
 make[1]: [installcheck] Error 1 (ignored)
-*** @TEST_DIR@/test/expected/pgxntool-test.out
---- @TEST_DIR@/test/results/pgxntool-test.out
+*** @TEST_DIR@/repo/test/expected/pgxntool-test.out
+--- @TEST_DIR@/repo/test/results/pgxntool-test.out
 ***************
 *** 0 ****
 --- 1,59 ----
-+ \i @TEST_DIR@/test/pgxntool/setup.sql
++ \i @TEST_DIR@/repo/test/pgxntool/setup.sql
 + \i test/pgxntool/psql.sql
 + -- No status messages
 + \set QUIET true
@@ -199,7 +187,7 @@ make[1]: [installcheck] Error 1 (ignored)
 +   , 3
 + );
 + ok 1
-+ \i @TEST_DIR@/test/pgxntool/finish.sql
++ \i @TEST_DIR@/repo/test/pgxntool/finish.sql
 + SELECT finish();
 + \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
 + # TRANSACTION INTENTIONALLY LEFT OPEN!
@@ -278,12 +266,12 @@ test pgxntool-test            ... FAILED
 ======================
 
 The differences that caused some tests to fail can be viewed in the
-file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
-above is saved in the file "@TEST_DIR@/test/regression.out".
+file "@TEST_DIR@/repo/test/regression.diffs".  A copy of the test summary that you see
+above is saved in the file "@TEST_DIR@/repo/test/regression.out".
 
 make[1]: [installcheck] Error 1 (ignored)
-*** @TEST_DIR@/test/expected/pgxntool-test.out
---- @TEST_DIR@/test/results/pgxntool-test.out
+*** @TEST_DIR@/repo/test/expected/pgxntool-test.out
+--- @TEST_DIR@/repo/test/results/pgxntool-test.out
 ***************
 *** 57,60 ****
   \echo # TRANSACTION INTENTIONALLY LEFT OPEN!
@@ -319,12 +307,12 @@ test pgxntool-test            ... FAILED
 ======================
 
 The differences that caused some tests to fail can be viewed in the
-file "@TEST_DIR@/test/regression.diffs".  A copy of the test summary that you see
-above is saved in the file "@TEST_DIR@/test/regression.out".
+file "@TEST_DIR@/repo/test/regression.diffs".  A copy of the test summary that you see
+above is saved in the file "@TEST_DIR@/repo/test/regression.out".
 
 make[1]: [installcheck] Error 1 (ignored)
-*** @TEST_DIR@/test/expected/pgxntool-test.out
---- @TEST_DIR@/test/results/pgxntool-test.out
+*** @TEST_DIR@/repo/test/expected/pgxntool-test.out
+--- @TEST_DIR@/repo/test/results/pgxntool-test.out
 ***************
 *** 57,60 ****
   \echo # TRANSACTION INTENTIONALLY LEFT OPEN!

@@ -10,28 +10,16 @@ if [ "$1" == "-v" ]; then
 fi
 BASEDIR=`cd ${0%/*}; pwd`
 
-. $BASEDIR/.env
-#wc $LOG
-. $BASEDIR/lib.sh
-#wc $LOG >&8
-
-PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
-PGXNREPO=${PGXNREPO:-${2:-$BASEDIR/../pgxntool}}
+. $BASEDIR/../.env
+. $TOPDIR/lib.sh
 
 DISTRIBUTION_NAME=distribution_test
 EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
 
-PG_LOCATION=`pg_config --bindir | sed 's#/bin##'`
-
-PGXNREPO=`find_repo $PGXNREPO`
-
-
-# Need to do this so that make dist isn't cluttering up a higher level directory
-TEST_DIR=$TEST_DIR/repo
 
 #./clone.sh "$PGXNBRANCH" "$PGXNREPO"
 
-cd $TEST_DIR
+cd $TEST_REPO
 
 out Making checkout dirty
 touch garbage
@@ -52,16 +40,24 @@ ls
 git status
 git diff
 
+
 out git commit
 git commit -am "Test setup"
+
 
 out Verify changing META.in.json works
 # Need to sleep 1 second otherwise make won't pickup new timestamp
 sleep 1
+# Sanity check
+[ -n "$DISTRIBUTION_NAME" ] && [ -n "$EXTENSION_NAME" ]
+
 sed -i '' -e "s/DISTRIBUTION_NAME/$DISTRIBUTION_NAME/" -e "s/EXTENSION_NAME/$EXTENSION_NAME/" META.in.json
+#git diff -u
+
 out -v This make will produce a bogus '"already up to date"' message for some reason
 make
 git commit -am "Change META"
+
 
 # Note: It's easier to do this now than when the checkout is all cluttered
 out Test creating a release
@@ -84,25 +80,25 @@ quote='"'
 sed -i '' -e "s/CREATE EXTENSION \.\.\..*/CREATE EXTENSION ${quote}$EXTENSION_NAME${quote};/" test/deps.sql
 
 out Make certain test/output gets created
-[ ! -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory should not exist!"; exit 1)
+[ ! -e $TEST_REPO/test/output ] || (out "ERROR! test/output directory should not exist!"; exit 1)
 make test # TODO: ensure this exits non-zero
-[ -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory does not exist!"; exit 1)
-[ -d $TEST_DIR/test/output ] || (out "ERROR! test/output is not a directory!"; exit 1)
+[ -e $TEST_REPO/test/output ] || (out "ERROR! test/output directory does not exist!"; exit 1)
+[ -d $TEST_REPO/test/output ] || (out "ERROR! test/output is not a directory!"; exit 1)
 
 out And copy expected output file to output dir that should now exist
-cp $BASEDIR/pgxntool-test.source test/output
+cp $TOPDIR/pgxntool-test.source test/output
 
 out Run make test again
 make test || exit 1
 out -v ^^^ Should be clean output ^^^
 
 out Remove input and output directories, make sure output is not recreated
-rm -rf $TEST_DIR/test/input $TEST_DIR/test/output
+rm -rf $TEST_REPO/test/input $TEST_REPO/test/output
 make test
-[ ! -e $TEST_DIR/test/output ] || (out "ERROR! test/output directory exists!"; exit 1)
+[ ! -e $TEST_REPO/test/output ] || (out "ERROR! test/output directory exists!"; exit 1)
 
 # Mess with output to test make results
-echo >> $TEST_DIR/test/expected/pgxntool-test.out
+echo >> $TEST_REPO/test/expected/pgxntool-test.out
 
 out Test make results
 make test
@@ -111,30 +107,6 @@ make results
 make test
 out -v ^^^ Should be clean output, BUT NOTE THERE WILL BE A FAILURE DIRECTLY ABOVE! ^^^
 
-# Restore stdout and close FD #8. Ditto with stderr
-exec >&8 8>&-
-#exec 2>&9 9>&-
-
-cp $BASEDIR/expected.sed $TEST_DIR/
-if [ `psql -qtc "SELECT current_setting('server_version_num')::int < 90200"` == t ]; then
-  echo "s!rm -f  sql/pgxntool-test--0.1.0.sql!rm -rf  sql/pgxntool-test--0.1.0.sql!" >> $TEST_DIR/expected.sed
-  echo "s!rm -f ../distribution_test!rm -rf ../distribution_test!" >> $TEST_DIR/expected.sed
-fi
-# Need to strip out temporary path and git hashes out of the log file. The
-# (/private) bit is to filter out some crap OS X adds.
-sed -i .bak -E \
-  -e "s#(/private)\\\\?$TEST_DIR#@TEST_DIR@#g" \
-  -e "s#^git fetch $PGXNREPO $PGXNBRANCH#git fetch @PGXNREPO@ @PGXNBRANCH@#" \
-  -e "s#$PG_LOCATION#@PG_LOCATION@#g" \
-  -f $TEST_DIR/expected.sed \
-  $LOG
-
-# Since diff will exit non-zero if there's a delta, change our error trap
-trap "echo 'Unexpected output. Re-run with $0 -v or run'; echo 'cat $LOG.diff'; echo 'to see it.'; echo" ERR
-diff -u $BASEDIR/expected.out $LOG > $LOG.diff
-
-echo 
-echo All tests successful!
-echo
+check_log
 
 # vi: expandtab sw=2 ts=2

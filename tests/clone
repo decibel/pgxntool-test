@@ -5,23 +5,14 @@ set -o errexit -o errtrace -o pipefail
 
 BASEDIR=`cd ${0%/*}; pwd`
 
-. $BASEDIR/.env
-. $BASEDIR/lib.sh
+. $BASEDIR/../.env
+. $TOPDIR/lib.sh
 
-PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
-PGXNREPO=${PGXNREPO:-${2:-$BASEDIR/../pgxntool}}
-TEST_TEMPLATE=${TEST_TEMPLATE:-${0%/*}/../pgxntool-test-template}
-
-PGXNREPO=`find_repo $PGXNREPO`
-TEST_TEMPLATE=`find_repo $TEST_TEMPLATE`
-
-# Need to do this so that make dist isn't cluttering up a higher level directory
-TEST_DIR=$TEST_DIR/repo
-mkdir $TEST_DIR || exit 1
+mkdir $TEST_REPO || exit 1
 
 out Cloning tree
-git clone $TEST_TEMPLATE $TEST_DIR 2>&9 # Need to redirect this to avoid cruft in log
-cd $TEST_DIR
+git clone $TEST_TEMPLATE $TEST_REPO 2>&9 # Need to redirect this to avoid cruft in log
+cd $TEST_REPO
 
 {
   # Before we do anything else, change origin to something BS so we don't accidentally screw up the real test repo
@@ -34,8 +25,10 @@ cd $TEST_DIR
 out Doing subtree add
 git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH 2>&1
 
+check_log
+
 # If we don't turn this off we get cruft in the log
-trap - EXIT
+#trap - EXIT
 
 #head_log after setup
 
