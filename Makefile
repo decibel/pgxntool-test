@@ -19,6 +19,7 @@ TEST_TARGETS = $(TESTS:%=test-%)
 # Dependencies
 test-setup: test-clone
 test-main: test-setup
+test-dist: test-meta
 test-make-results: test-main
 
 .PHONY: test
