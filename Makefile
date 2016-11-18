@@ -31,7 +31,7 @@ test: clean_temp cont
 # Just continue what we were building
 .PHONY: cont
 cont: $(TEST_TARGETS)
-	@[ "`cat $(DIFF_DIR)/*.diff | head -n1`" == "" ] && (echo;echo 'All tests passed!';echo)
+	@[ "`cat $(DIFF_DIR)/*.diff 2>/dev/null | head -n1`" == "" ] && (echo;echo 'All tests passed!';echo)
 
 #
 # Actual test targets
@@ -63,7 +63,7 @@ $(RESULT_DIR)/%.out: $(TEST_DIR)/% .env lib.sh | $(RESULT_SED)
 # TODO: allow controlling whether we stop immediately on error or not
 $(DIFF_DIR)/%.diff: $(RESULT_DIR)/%.out expected/%.out | $(DIFF_DIR)
 	@echo diffing $*
-	@diff -u expected/$*.out $< > $@ || head -n 40 $@
+	@diff -u expected/$*.out $< > $@ && rm $@ || head -n 40 $@
 
 
 #
