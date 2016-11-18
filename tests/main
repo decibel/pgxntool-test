@@ -21,30 +21,6 @@ EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
 
 cd $TEST_REPO
 
-out Making checkout dirty
-touch garbage
-git add garbage
-out Verify setup.sh errors out
-if pgxntool/setup.sh; then
-  echo "setup.sh should have exited non-zero" >&2
-  exit 1
-fi
-git reset HEAD garbage
-rm garbage
-
-out Running setup.sh
-pgxntool/setup.sh
-
-out -v Status
-ls
-git status
-git diff
-
-
-out git commit
-git commit -am "Test setup"
-
-
 out Verify changing META.in.json works
 # Need to sleep 1 second otherwise make won't pickup new timestamp
 sleep 1

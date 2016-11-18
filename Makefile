@@ -17,7 +17,8 @@ TESTS ?= $(subst $(TEST_DIR)/,,$(wildcard $(TEST_DIR)/*)) # Can't use pathsubst 
 TEST_TARGETS = $(TESTS:%=test-%)
 
 # Dependencies
-test-main: test-clone
+test-setup: test-clone
+test-main: test-setup
 
 .PHONY: test
 test: clean_temp cont
@@ -41,6 +42,10 @@ expected/%.out:
 # Generic test environment
 .PHONY: env
 env: .env $(RESULT_SED)
+
+.PHONY: sync-expected
+sync-expected: $(TESTS:%=$(RESULT_DIR)/%.out)
+	cp $^ expected/
 
 # Generic output target
 .PRECIOUS: $(RESULT_DIR)/%.out
