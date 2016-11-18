@@ -22,8 +22,8 @@ test-setup: test-clone
 test-meta: test-setup
 test-dist: test-meta
 test-setup-final: test-dist
-test-main: test-setup-final
-test-make-results: test-main
+test-make-test: test-setup-final
+test-make-results: test-make-test
 
 .PHONY: test
 test: clean_temp cont
