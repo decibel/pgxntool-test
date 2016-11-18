@@ -1,0 +1,30 @@
+#!/bin/bash
+
+trap 'echo "ERROR: $BASH_SOURCE: line $LINENO" >&2' ERR
+set -o errexit -o errtrace -o pipefail
+#set -o xtrace -o verbose
+
+if [ "$1" == "-v" ]; then
+  verboseout=1
+  shift
+fi
+BASEDIR=`cd ${0%/*}; pwd`
+
+. $BASEDIR/../.env
+. $TOPDIR/lib.sh
+cd $TEST_REPO
+
+DISTRIBUTION_NAME=distribution_test
+
+# Note: It's easier to do this now than when the checkout is all cluttered
+out Test creating a release
+make dist
+unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep .asc | awk '{print $4}'
+# grep exits with 1 if it can't find anything
+out Making sure ONLY TEST_DOC.asc is in the distribution
+unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep TEST_DOC.asc | awk '{print $4}'
+[ `unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep -c .asc` -eq 1 ] || exit 1
+
+check_log
+
+# vi: expandtab sw=2 ts=2

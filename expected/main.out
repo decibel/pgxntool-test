@@ -1,20 +1,3 @@
-# Verify changing META.in.json works
-######################################
-# This make will produce a bogus "already up to date" message for some reason
-######################################
-make[1]: `META.json' is up to date.
-@GIT COMMIT@ Change META
- 2 files changed, 4 insertions(+), 4 deletions(-)
-# Test creating a release
-git branch 0.1.0
-git push --set-upstream origin 0.1.0
-To ../fake_repo
- * [new branch]      0.1.0 -> 0.1.0
-Branch 0.1.0 set up to track remote branch 0.1.0 from origin.
-git archive --prefix=distribution_test-0.1.0/ -o ../distribution_test-0.1.0.zip 0.1.0
-distribution_test-0.1.0/t/TEST_DOC.asc
-# Making sure ONLY TEST_DOC.asc is in the distribution
-distribution_test-0.1.0/t/TEST_DOC.asc
 # Run setup.sh again to verify it doesn't over-write things
 .gitignore already exists
 META.in.json already exists

@@ -4,4 +4,4 @@
 ######################################
 make[1]: `META.json' is up to date.
 @GIT COMMIT@ Change META
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 2 files changed, 4 insertions(+), 4 deletions(-)

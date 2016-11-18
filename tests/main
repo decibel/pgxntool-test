@@ -14,31 +14,7 @@ BASEDIR=`cd ${0%/*}; pwd`
 . $TOPDIR/lib.sh
 cd $TEST_REPO
 
-DISTRIBUTION_NAME=distribution_test
 EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
-
-out Verify changing META.in.json works
-# Need to sleep 1 second otherwise make won't pickup new timestamp
-sleep 1
-# Sanity check
-[ -n "$DISTRIBUTION_NAME" ] && [ -n "$EXTENSION_NAME" ]
-
-sed -i '' -e "s/DISTRIBUTION_NAME/$DISTRIBUTION_NAME/" -e "s/EXTENSION_NAME/$EXTENSION_NAME/" META.in.json
-#git diff -u
-
-out -v This make will produce a bogus '"already up to date"' message for some reason
-make
-git commit -am "Change META"
-
-
-# Note: It's easier to do this now than when the checkout is all cluttered
-out Test creating a release
-make dist
-unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep .asc | awk '{print $4}'
-# grep exits with 1 if it can't find anything
-out Making sure ONLY TEST_DOC.asc is in the distribution
-unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep TEST_DOC.asc | awk '{print $4}'
-[ `unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep -c .asc` -eq 1 ] || exit 1
 
 out "Run setup.sh again to verify it doesn't over-write things"
 pgxntool/setup.sh
