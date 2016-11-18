@@ -12,14 +12,10 @@ BASEDIR=`cd ${0%/*}; pwd`
 
 . $BASEDIR/../.env
 . $TOPDIR/lib.sh
+cd $TEST_REPO
 
 DISTRIBUTION_NAME=distribution_test
 EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
-
-
-#./clone.sh "$PGXNBRANCH" "$PGXNREPO"
-
-cd $TEST_REPO
 
 out Verify changing META.in.json works
 # Need to sleep 1 second otherwise make won't pickup new timestamp
@@ -72,16 +68,6 @@ out Remove input and output directories, make sure output is not recreated
 rm -rf $TEST_REPO/test/input $TEST_REPO/test/output
 make test
 [ ! -e $TEST_REPO/test/output ] || (out "ERROR! test/output directory exists!"; exit 1)
-
-# Mess with output to test make results
-echo >> $TEST_REPO/test/expected/pgxntool-test.out
-
-out Test make results
-make test
-out -v ^^^ Should have a diff ^^^
-make results
-make test
-out -v ^^^ Should be clean output, BUT NOTE THERE WILL BE A FAILURE DIRECTLY ABOVE! ^^^
 
 check_log
 

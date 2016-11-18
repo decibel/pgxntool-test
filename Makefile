@@ -19,6 +19,7 @@ TEST_TARGETS = $(TESTS:%=test-%)
 # Dependencies
 test-setup: test-clone
 test-main: test-setup
+test-make-results: test-main
 
 .PHONY: test
 test: clean_temp cont
@@ -58,7 +59,7 @@ $(RESULT_DIR)/%.out: $(TEST_DIR)/% .env lib.sh | $(RESULT_SED)
 # TODO: allow controlling whether we stop immediately on error or not
 $(DIFF_DIR)/%.diff: $(RESULT_DIR)/%.out expected/%.out | $(DIFF_DIR)
 	@echo diffing $*
-	@diff -u expected/$*.out $< > $@
+	@diff -u expected/$*.out $< > $@ || head -n 40 $@
 
 
 #
