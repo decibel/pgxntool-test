@@ -14,19 +14,6 @@ BASEDIR=`cd ${0%/*}; pwd`
 . $TOPDIR/lib.sh
 cd $TEST_REPO
 
-EXTENSION_NAME=pgxntool-test # TODO: rename to something less likely to conflict
-
-out "Run setup.sh again to verify it doesn't over-write things"
-pgxntool/setup.sh
-git diff --exit-code
-
-out Copy stuff from template to where it normally lives
-cp -R t/* .
-
-out Add extension to deps.sql
-quote='"'
-sed -i '' -e "s/CREATE EXTENSION \.\.\..*/CREATE EXTENSION ${quote}$EXTENSION_NAME${quote};/" test/deps.sql
-
 out Make certain test/output gets created
 [ ! -e $TEST_REPO/test/output ] || (out "ERROR! test/output directory should not exist!"; exit 1)
 make test # TODO: ensure this exits non-zero
