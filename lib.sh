@@ -8,12 +8,21 @@ head_log() {
     echo '' 1>&2
 }
 
+local_repo() {
+  # Can't just return $? since errexit is set
+  if echo $1 | egrep -q '^(git|https?):'; then
+    return 0
+  else
+    return 1
+  fi
+}
 find_repo () {
-  if ! echo $1 | egrep -q '^(git|https?):'; then
+  if ! local_repo $1; then
     cd $1
     pwd
   fi
 }
+
 out () {
   if [ "$1" == "-v" ]; then
     local verbose=1
@@ -78,6 +87,19 @@ reset_redirect() {
     exec >&8 8>&-
     exec 2>&9 9>&-
   fi
+}
+only_error() {
+  # First echo will error if FD 9 isn't open
+  echo "$@" >&9 2>&- || echo "$@" >&2
+}
+error() {
+  echo "$@" >&2
+}
+die() {
+  return=$1
+  shift
+  error "$@"
+  exit $return
 }
 
 PGXNBRANCH=${PGXNBRANCH:-${1:-master}}

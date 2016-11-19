@@ -22,8 +22,18 @@ cd $TEST_REPO
   git push --set-upstream origin master
 } 2>&1 # Git is damn chatty...
 
-out Doing subtree add
-git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH 2>&1
+# If the repo is local then see if the local checkout is on the branch we want
+# and if it's dirty. In that case, rsync the files in place instead of doing a
+# subtree add
+out Installing pgxntool
+if local_repo $PGXNREPO && \
+  [ -n "$(cd $PGXNREPO && git status --porcelain)" ] && \
+  [ "$(cd $PGXNREPO && git symbolic-ref --short HEAD)" == "$PGXNBRANCH" ]
+then
+  rsync -a $PGXNREPO pgxntool 2>&1 >/dev/null
+else
+  git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH 2>&1 >/dev/null
+fi
 
 check_log
 

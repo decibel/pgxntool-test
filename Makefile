@@ -31,7 +31,9 @@ test: clean_temp cont
 # Just continue what we were building
 .PHONY: cont
 cont: $(TEST_TARGETS)
-	@[ "`cat $(DIFF_DIR)/*.diff 2>/dev/null | head -n1`" == "" ] && (echo;echo 'All tests passed!';echo)
+	@[ "`cat $(DIFF_DIR)/*.diff 2>/dev/null | head -n1`" == "" ] \
+		&& (echo; echo 'All tests passed!'; echo) \
+		|| (echo; echo "Some tests failed:"; echo ; egrep -lR '.' $(DIFF_DIR); echo; exit 1)
 
 #
 # Actual test targets

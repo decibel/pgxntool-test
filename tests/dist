@@ -21,9 +21,12 @@ out Test creating a release
 make dist
 unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep .asc | awk '{print $4}'
 # grep exits with 1 if it can't find anything
-out Making sure ONLY TEST_DOC.asc is in the distribution
-unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep TEST_DOC.asc | awk '{print $4}'
-[ `unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep -c .asc` -eq 1 ] || exit 1
+out "Ensure there's at least some docs in the distribution" # This is mostly to make sure the next test works
+unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | egrep -q 'asc|adoc|asciidoc|html|md|txt' || exit 1
+out Ensure there are no pgxntool docs in the distribution
+if unzip -l ../$DISTRIBUTION_NAME-0.1.0.zip | grep pgxntool/ | egrep 'asc|adoc|asciidoc|html|md|txt'; then
+  die 5 "Found document files in pgxntool/"
+fi
 
 check_log
 

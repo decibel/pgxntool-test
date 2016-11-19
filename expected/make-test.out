@@ -3,7 +3,9 @@ rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 @INSTALL@ -c -d '@PG_LOCATION@/share/extension'
+@INSTALL@ -c -d '@PG_LOCATION@/share/doc/extension'
 @INSTALL@ -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@INSTALL@ -c -m 644 ./doc/adoc_doc.adoc ./doc/asc_doc.asc ./doc/asciidoc_doc.asciidoc '@PG_LOCATION@/share/doc/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -98,7 +100,9 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 @INSTALL@ -c -d '@PG_LOCATION@/share/extension'
+@INSTALL@ -c -d '@PG_LOCATION@/share/doc/extension'
 @INSTALL@ -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@INSTALL@ -c -m 644 ./doc/adoc_doc.adoc ./doc/asc_doc.asc ./doc/asciidoc_doc.asciidoc '@PG_LOCATION@/share/doc/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
@@ -123,7 +127,9 @@ rm -rf  sql/pgxntool-test--0.1.0.sql
 rm -rf results/ regression.diffs regression.out tmp_check/ log/
 cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
 @INSTALL@ -c -d '@PG_LOCATION@/share/extension'
+@INSTALL@ -c -d '@PG_LOCATION@/share/doc/extension'
 @INSTALL@ -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@INSTALL@ -c -m 644 ./doc/adoc_doc.adoc ./doc/asc_doc.asc ./doc/asciidoc_doc.asciidoc '@PG_LOCATION@/share/doc/extension/'
 INVOCATION OF pg_regress
 (using postmaster on Unix socket, default port)
 ============== dropping database "contrib_regression" ==============
