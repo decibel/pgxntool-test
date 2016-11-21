@@ -8,9 +8,11 @@ BASEDIR=`cd ${0%/*}; pwd`
 . $BASEDIR/../.env
 . $TOPDIR/lib.sh
 
+debug_vars 3 TEST_TEMPLATE TEST_REPO
 mkdir $TEST_REPO || exit 1
 
 out Cloning tree
+[ -n "$TEST_TEMPLATE" ] || die 1 '$TEST_TEMPLATE is not set'
 git clone $TEST_TEMPLATE $TEST_REPO 2>&9 # Need to redirect this to avoid cruft in log
 cd $TEST_REPO
 
@@ -26,13 +28,18 @@ cd $TEST_REPO
 # and if it's dirty. In that case, rsync the files in place instead of doing a
 # subtree add
 out Installing pgxntool
+git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH 2>&1 >/dev/null
 if local_repo $PGXNREPO && \
-  [ -n "$(cd $PGXNREPO && git status --porcelain)" ] && \
-  [ "$(cd $PGXNREPO && git symbolic-ref --short HEAD)" == "$PGXNBRANCH" ]
+  [ -n "$(cd $PGXNREPO && git status --porcelain)" ]
 then
-  rsync -a $PGXNREPO pgxntool 2>&1 >/dev/null
-else
-  git subtree add -P pgxntool --squash $PGXNREPO $PGXNBRANCH 2>&1 >/dev/null
+  if [ "$(cd $PGXNREPO && git symbolic-ref --short HEAD)" == "$PGXNBRANCH" ]; then
+    error "NOTICE: $PGXNREPO is dirty and on $PGXNBRANCH; using rsync"
+    rsync -a $PGXNREPO . 2>&1 >/dev/null
+    git add --all
+    git commit -m "Committing unsaved pgxntool changes"
+  else
+    die 2 "repository $PGXNREPO is dirty but not on branch $PGXNBRANCH"
+  fi
 fi
 
 check_log

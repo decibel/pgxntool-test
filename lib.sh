@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This needs to be pulled in first because we over-ride some of what's in it!
+. $TOPDIR/util.sh
+
 head_log() {
     echo "$@" 1>&2
     echo $0: head $LOG 1>&2
@@ -11,13 +14,15 @@ head_log() {
 local_repo() {
   # Can't just return $? since errexit is set
   if echo $1 | egrep -q '^(git|https?):'; then
-    return 0
-  else
+    debug 19 repo $1 is NOT local
     return 1
+  else
+    debug 19 repo $1 is local
+    return 0
   fi
 }
 find_repo () {
-  if ! local_repo $1; then
+  if local_repo $1; then
     cd $1
     pwd
   fi
@@ -82,17 +87,20 @@ redirect() {
 }
 
 reset_redirect() {
-  if { true >&8; } 2>&-; then
+  if { true >&8; } 2>/dev/null; then
     # Restore stdout and close FD #8. Ditto with stderr
     exec >&8 8>&-
     exec 2>&9 9>&-
   fi
 }
-only_error() {
-  # First echo will error if FD 9 isn't open
-  echo "$@" >&9 2>&- || echo "$@" >&2
-}
 error() {
+  if { true >&9; } 2>/dev/null; then
+    echo "$@" >&9
+  else
+    echo "$@" >&2
+  fi
+}
+error_log() {
   echo "$@" >&2
 }
 die() {
@@ -101,15 +109,24 @@ die() {
   error "$@"
   exit $return
 }
+debug() {
+  level=$1
+  if [ $level -le ${DEBUG:=0} ]; then
+    shift
+    error DEBUG $level: "$@"
+  fi
+}
 
 PGXNBRANCH=${PGXNBRANCH:-${1:-master}}
 PGXNREPO=${PGXNREPO:-${2:-${TOPDIR}/../pgxntool}}
 TEST_TEMPLATE=${TEST_TEMPLATE:-${TOPDIR}/../pgxntool-test-template}
 TEST_REPO=$TEST_DIR/repo
+debug_vars 9 PGXNBRANCH PGXNREPO TEST_TEMPLATE TEST_REPO
 
 PG_LOCATION=`pg_config --bindir | sed 's#/bin##'`
 PGXNREPO=`find_repo $PGXNREPO`
 TEST_TEMPLATE=`find_repo $TEST_TEMPLATE`
+debug_vars 19 PG_LOCATION PGXNREPO TEST_REPO
 
 redirect
 

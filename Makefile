@@ -20,13 +20,17 @@ TEST_TARGETS = $(TESTS:%=test-%)
 test-setup: test-clone
 
 test-meta: test-setup
+
 test-dist: test-meta
 test-setup-final: test-dist
+
 test-make-test: test-setup-final
+test-doc: test-setup-final
+
 test-make-results: test-make-test
 
 .PHONY: test
-test: clean_temp cont
+test: clean-temp cont
 
 # Just continue what we were building
 .PHONY: cont
@@ -86,17 +90,17 @@ $(RESULT_SED): base_result.sed | $(RESULT_DIR)
 	fi
 
 CLEAN += .env
-.env: make_temp.sh
+.env: make-temp.sh
 	@echo "Creating temporary environment"
-	@./make_temp.sh > .env
+	@./make-temp.sh > .env
 	@RESULT_DIR=`pwd`/$(RESULT_DIR) && echo "RESULT_DIR='$${RESULT_DIR}'" >> .env
 
-.PHONY: clean_temp
-clean: clean_temp
-clean_temp:
-	@[ ! -e .env ] || (echo Removing temporary environment; ./clean_temp.sh)
+.PHONY: clean-temp
+clean: clean-temp
+clean-temp:
+	@[ ! -e .env ] || (echo Removing temporary environment; ./clean-temp.sh)
 
-clean: clean_temp 
+clean: clean-temp 
 	rm -rf $(CLEAN)
 
 # To use this, do make print-VARIABLE_NAME

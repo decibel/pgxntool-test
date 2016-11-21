@@ -1,0 +1,30 @@
+# Make with no ASCIIDOC should not create docs
+cp sql/pgxntool-test.sql sql/pgxntool-test--0.1.0.sql
+@INSTALL@ -c -d '@PG_LOCATION@/share/extension'
+@INSTALL@ -c -d '@PG_LOCATION@/share/doc/extension'
+@INSTALL@ -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@INSTALL@ -c -m 644 ./doc/* '@PG_LOCATION@/share/doc/extension/'
+# Make sure missing ASCIIDOC errors out
+pgxntool/base.mk:125: Could not find "asciidoc" or "asciidoctor". Add one of them to your PATH,
+pgxntool/base.mk:125: or set ASCIIDOC to the correct location.
+pgxntool/base.mk:125: *** Could not build %doc/adoc_doc.html.  Stop.
+# make returned 2
+# Make sure make install with ASCIIDOC works
+@INSTALL@ -c -d '@PG_LOCATION@/share/extension'
+@INSTALL@ -c -d '@PG_LOCATION@/share/doc/extension'
+/opt/local/bin/asciidoctor  doc/adoc_doc.adoc
+/opt/local/bin/asciidoctor  doc/asciidoc_doc.asciidoc
+@INSTALL@ -c -m 644 ./sql/pgxntool-test--0.1.0.sql ./sql/pgxntool-test--0.1.0--0.1.1.sql ./pgxntool-test.control  '@PG_LOCATION@/share/extension/'
+@INSTALL@ -c -m 644 ./doc/* '@PG_LOCATION@/share/doc/extension/'
+# Make sure make clean does not clean docs
+rm -rf ../distribution_test-0.1.0.zip sql/pgxntool-test--0.1.0.sql
+rm -rf results/ regression.diffs regression.out tmp_check/ log/
+# Make sure make docclean cleans docs
+ASCIIDOC_HTML is recursive variable set to "doc/adoc_doc.html doc/asciidoc_doc.html"
+DOCS_HTML is recursive variable set to "doc/adoc_doc.html doc/asciidoc_doc.html"
+rm -f doc/adoc_doc.html doc/asciidoc_doc.html
+# Test ASCIIDOC_EXTS='asc'
+/opt/local/bin/asciidoctor  doc/asc_doc.asc
+/opt/local/bin/asciidoctor  doc/adoc_doc.adoc
+/opt/local/bin/asciidoctor  doc/asciidoc_doc.asciidoc
+rm -f doc/asc_doc.html doc/adoc_doc.html doc/asciidoc_doc.html
