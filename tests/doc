@@ -14,6 +14,9 @@ BASEDIR=`cd ${0%/*}; pwd`
 . $TOPDIR/lib.sh
 cd $TEST_DIR
 
+# Unset ASCIIDOC so the which logic gets tested
+unset ASCIIDOC
+
 get_html() {
   local rc
   html=`echo doc/*.html`
@@ -53,6 +56,13 @@ other_html=`get_html`
 debug_vars 1 input expected other_html
 
 out Make with no ASCIIDOC should not create docs
+docs=$(ASCIIDOC='' make print-DOCS)
+clean_docs=$(echo $docs | sed -e 's/other.html//')
+debug_vars 2 docs clean_docs
+if echo $clean_docs | grep -q html; then
+  error "docs='$docs', clean_docs='$clean_docs'"
+  die 5 "clean_docs should not contain 'html'"
+fi
 ASCIIDOC='' make install
 
 [ -z "`get_html`" ] || die 5 "ASCIIDOC='' make install produced the following .html files in doc: " `get_html`
@@ -65,8 +75,10 @@ else
   die 5 "ASCIIDOC='' make html did not fail"
 fi
 
-out Make sure make install with ASCIIDOC works
-make install
+# Use test since it's the most comprehensive target that should be using install
+out Make sure make test with ASCIIDOC works
+make print-DOCS
+make test
 html=`get_html`
 check_html "$html" "$expected"
 
@@ -77,6 +89,7 @@ html2=`get_html`
 
 out Make sure make docclean cleans docs
 make print-ASCIIDOC_HTML
+make print-DOCS
 make print-DOCS_HTML
 make docclean
 [ -z "`get_html`" ] || die 5 "make docclean left html files behind: " `get_html`
@@ -89,6 +102,14 @@ doc/asciidoc_doc.html'
 
 ASCIIDOC_EXTS='asc' make docclean
 [ -z "`get_html`" ] || die 5 "ASCIIDOC_EXTS='asc' make docclean left html files behind: " `get_html`
+
+out Ensure things work with no doc directory
+make html
+rm -rf doc
+make print-DOCS
+make clean
+make docclean
+make install
 
 check_log
 
